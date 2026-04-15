@@ -133,4 +133,21 @@ describe("Weather app", () => {
     cy.contains("14").should("be.visible"); // wind speed
     cy.contains("0").should("be.visible"); // precipitation
   });
+
+  it("toggles temperature units from Celsius to Fahrenheit", () => {
+    cy.wait("@searchLocation");
+    cy.wait("@fetchForecast");
+
+    // Default should be Celsius
+    cy.contains("20°").should("be.visible");
+
+    // Open units dropdown
+    cy.contains("Units").click();
+
+    // Select Fahrenheit
+    cy.contains(/fahrenheit/i).click();
+
+    // Verify temperature converted (20°C → 68°F)
+    cy.contains("68°").should("be.visible");
+  });
 });
