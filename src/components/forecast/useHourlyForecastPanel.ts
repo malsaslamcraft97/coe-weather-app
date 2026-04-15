@@ -1,15 +1,15 @@
 import { useState } from "react";
 import dropdownIcon from "../../../starter-files/assets/images/icon-dropdown.svg";
 
-export function useHourlyForecastPanel(selectedDayLabel: string) {
+export function useHourlyForecastPanel(
+  selectedDayLabel: string,
+  unit: "C" | "F",
+) {
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
-  const [unit, setUnit] = useState<"C" | "F">("C");
+  const [isUnitOpen, setIsUnitOpen] = useState(false);
 
   const convertTemperature = (temp: number) => {
-    if (unit === "F") {
-      return Math.round((temp * 9) / 5 + 32);
-    }
-    return temp;
+    return unit === "F" ? Math.round((temp * 9) / 5 + 32) : temp;
   };
 
   return {
@@ -28,7 +28,7 @@ export function useHourlyForecastPanel(selectedDayLabel: string) {
 
     selectedDayIndex,
     setSelectedDayIndex,
-    unit,
-    setUnit,
+    isUnitOpen,
+    setIsUnitOpen,
   };
 }

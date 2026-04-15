@@ -27,9 +27,12 @@ function App() {
     toggleUnitsMenu,
     handleSearchSubmit,
     retrySearch,
+    unit,
+    setUnit,
   } = useApp();
 
-  const showDashboard = status === "ready" || status === "searching" || status === "loading";
+  const showDashboard =
+    status === "ready" || status === "searching" || status === "loading";
   const showSearchProgress = status === "searching";
   const showLoadingDashboard = status === "loading" && !weather;
   const showNoResults = status === "no-results";
@@ -63,7 +66,11 @@ function App() {
             <img className={styles.errorIcon} src={errorIcon} alt="" />
             <h2 className={styles.errorTitle}>Something went wrong</h2>
             <p className={styles.errorCopy}>{errorMessage}</p>
-            <button className={styles.retryButton} type="button" onClick={() => void retrySearch()}>
+            <button
+              className={styles.retryButton}
+              type="button"
+              onClick={() => void retrySearch()}
+            >
               <img src={retryIcon} alt="" />
               Retry
             </button>
@@ -93,6 +100,8 @@ function App() {
               hourlyForecast={hourlyForecast}
               selectedDayLabel={showLoadingDashboard ? "-" : selectedDayLabel}
               isLoading={showLoadingDashboard}
+              unit={unit}
+              setUnit={setUnit}
             />
           </section>
         ) : null}

@@ -6,12 +6,16 @@ type HourlyForecastPanelProps = {
   hourlyForecast: HourlyEntry[];
   selectedDayLabel: string;
   isLoading?: boolean;
+  unit: "C" | "F";
+  setUnit: (unit: "C" | "F") => void;
 };
 
 export function HourlyForecastPanel({
   hourlyForecast,
   selectedDayLabel,
   isLoading = false,
+  unit,
+  setUnit,
 }: HourlyForecastPanelProps) {
   const {
     title,
@@ -21,9 +25,9 @@ export function HourlyForecastPanel({
     formatTemperature,
     selectedDayIndex,
     setSelectedDayIndex,
-    unit,
-    setUnit,
-  } = useHourlyForecastPanel(selectedDayLabel);
+    isUnitOpen,
+    setIsUnitOpen,
+  } = useHourlyForecastPanel(selectedDayLabel, unit);
 
   // ✅ Minimal filtering logic for GREEN step (E2E Test)
   const filteredForecast =
@@ -46,9 +50,34 @@ export function HourlyForecastPanel({
         </button>
 
         <div>
-          <button>Units</button>
-          <button onClick={() => setUnit("C")}>Celsius</button>
-          <button onClick={() => setUnit("F")}>Fahrenheit</button>
+          <button
+            data-testid="units-toggle"
+            onClick={() => setIsUnitOpen((prev) => !prev)}
+          >
+            Units
+          </button>
+
+          {isUnitOpen && (
+            <div data-testid="units-dropdown">
+              <button
+                onClick={() => {
+                  setUnit("C");
+                  setIsUnitOpen(false);
+                }}
+              >
+                Celsius
+              </button>
+
+              <button
+                onClick={() => {
+                  setUnit("F");
+                  setIsUnitOpen(false);
+                }}
+              >
+                Fahrenheit
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

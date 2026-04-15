@@ -1,8 +1,9 @@
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useAppContext } from "./context/AppProvider";
 
 export function useApp() {
   const { state, dispatch, actions } = useAppContext();
+  const [unit, setUnit] = useState<"C" | "F">("C");
 
   const handleSearchSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,5 +35,7 @@ export function useApp() {
     selectUnit: actions.selectUnit,
     retrySearch: actions.retrySearch,
     handleSearchSubmit,
+    unit,
+    setUnit,
   };
 }

@@ -138,16 +138,13 @@ describe("Weather app", () => {
     cy.wait("@searchLocation");
     cy.wait("@fetchForecast");
 
-    // Default should be Celsius
     cy.contains("20°").should("be.visible");
 
-    // Open units dropdown
-    cy.contains("Units").click();
+    cy.get('[data-testid="units-toggle"]').click();
+    cy.get('[data-testid="units-dropdown"]').should("be.visible");
 
-    // Select Fahrenheit
-    cy.contains(/fahrenheit/i).click();
+    cy.contains("Fahrenheit").click();
 
-    // Verify temperature converted (20°C → 68°F)
     cy.contains("68°").should("be.visible");
   });
 
@@ -155,23 +152,18 @@ describe("Weather app", () => {
     cy.wait("@searchLocation");
     cy.wait("@fetchForecast");
 
-    // Initially dropdown options should NOT be visible
     cy.contains("Fahrenheit").should("not.exist");
 
-    // Open dropdown
-    cy.contains("Units").click();
+    cy.get('[data-testid="units-toggle"]').click();
+    cy.get('[data-testid="units-dropdown"]').should("be.visible");
 
-    // Now options should appear
     cy.contains("Celsius").should("be.visible");
     cy.contains("Fahrenheit").should("be.visible");
 
-    // Select Fahrenheit
     cy.contains("Fahrenheit").click();
 
-    // Dropdown should close (optional but good)
     cy.contains("Fahrenheit").should("not.exist");
 
-    // Temperature updated
     cy.contains("68°").should("be.visible");
   });
 });
