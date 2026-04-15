@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:e2e": "vite --host 127.0.0.1 --port 4173",
     "build": "tsc -b && vite build",
     "test": "vitest run",
     "test:watch": "vitest",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "start-server-and-test dev:e2e http://127.0.0.1:4173 cypress:run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,9 +25,11 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "cypress": "^13.17.0",
     "jsdom": "^29.0.2",
     "msw": "^2.13.3",
     "sass": "^1.77.8",
+    "start-server-and-test": "^3.0.2",
     "typescript": "^5.5.4",
     "vite": "^5.3.4",
     "vitest": "^4.1.4"
