@@ -1,0 +1,494 @@
+@use './styles/variables' as *;
+
+.page {
+  min-height: 100vh;
+  padding: 3rem clamp(1rem, 2vw, 2rem) 4rem;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(82, 98, 255, 0.15), transparent 28%),
+    linear-gradient(180deg, #09032f 0%, #08022c 100%);
+}
+
+.shell {
+  width: min(100%, 76rem);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 4.75rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+
+  img {
+    display: block;
+    height: 2rem;
+  }
+}
+
+.unitSwitch {
+  position: relative;
+}
+
+.unitButton,
+.dayPicker,
+.searchButton,
+.dayCard {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.unitButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.125rem;
+  border-radius: 0.875rem;
+  background: rgba(53, 48, 84, 0.92);
+  color: $color-white;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(70, 65, 108, 0.98);
+    transform: translateY(-1px);
+  }
+}
+
+.unitButtonLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 500;
+}
+
+.dropdownIcon {
+  width: 0.75rem;
+  opacity: 0.8;
+}
+
+.unitMenu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  width: 12rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  background: rgba(36, 31, 72, 0.98);
+  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(16px);
+}
+
+.unitMenuItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0.9rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: $color-white;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(91, 102, 220, 0.22);
+  }
+}
+
+.hero {
+  display: grid;
+  justify-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.heroTitle {
+  max-width: 10ch;
+  margin: 0;
+  color: $color-white;
+  font-family: $font-display;
+  font-size: clamp(3.25rem, 5.2vw, 4.25rem);
+  line-height: 0.95;
+  text-align: center;
+  letter-spacing: -0.06em;
+}
+
+.searchForm {
+  width: min(100%, 41rem);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.35rem;
+  border-radius: 1rem;
+  background: rgba(39, 35, 73, 0.92);
+  border: 1px solid transparent;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+
+  &:focus-within {
+    border-color: rgba(107, 122, 255, 0.78);
+    background: rgba(45, 40, 82, 0.96);
+  }
+
+  img {
+    width: 1.4rem;
+    flex: 0 0 auto;
+    opacity: 0.9;
+  }
+
+  input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: $color-white;
+    font-size: 1.05rem;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.72);
+    }
+  }
+}
+
+.searchButton {
+  min-width: 7.25rem;
+  padding: 0 1.6rem;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #6472ff 0%, #5462e6 100%);
+  color: $color-white;
+  font-size: 1rem;
+  font-weight: 600;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 1rem 2rem rgba(84, 98, 230, 0.3);
+  }
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24rem;
+  gap: 2rem;
+  align-items: start;
+}
+
+.mainColumn {
+  display: grid;
+  gap: 2rem;
+}
+
+.currentCard {
+  min-height: 17.6rem;
+  padding: 2rem;
+  border-radius: 1.35rem;
+  background-color: #4f5cf0;
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.currentContent {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.location {
+  margin: 0 0 0.5rem;
+  color: $color-white;
+  font-size: clamp(2rem, 3vw, 2.3rem);
+  line-height: 1;
+}
+
+.date {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1.2rem;
+}
+
+.currentWeather {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  img {
+    width: 4.9rem;
+    height: 4.9rem;
+  }
+}
+
+.currentTemperature {
+  margin: 0;
+  color: $color-white;
+  font-family: $font-display;
+  font-size: clamp(4.75rem, 6vw, 5.75rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.metricCard,
+.hourlyPanel,
+.dayCard {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(39, 35, 73, 0.94);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.metricCard {
+  padding: 1.3rem 1.2rem 1.1rem;
+  border-radius: 1rem;
+}
+
+.metricLabel {
+  margin: 0 0 1.5rem;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 1.05rem;
+}
+
+.metricValue {
+  margin: 0;
+  color: $color-white;
+  font-size: clamp(2rem, 3vw, 2.15rem);
+  line-height: 1;
+}
+
+.forecastSection {
+  padding-top: 1rem;
+}
+
+.sectionTitle,
+.hourlyTitle {
+  margin: 0;
+  color: $color-white;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.dailyGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.35rem;
+}
+
+.dayCard {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1rem 0.75rem 1.1rem;
+  border-radius: 1rem;
+  color: $color-white;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+
+  &:hover,
+  &:focus-visible,
+  &[data-active='true'] {
+    transform: translateY(-2px);
+    border-color: rgba(112, 129, 255, 0.55);
+    background: rgba(47, 42, 86, 0.98);
+  }
+}
+
+.dayName {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.dayIcon {
+  width: 3.4rem;
+  height: 3.4rem;
+  object-fit: contain;
+}
+
+.dayRange {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+}
+
+.hourlyPanel {
+  padding: 1.35rem 1.35rem 1.4rem;
+  border-radius: 1.35rem;
+}
+
+.hourlyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.dayPicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  border-radius: 0.8rem;
+  background: rgba(76, 72, 112, 0.96);
+  color: $color-white;
+  font-weight: 500;
+}
+
+.hourlyList {
+  display: grid;
+  gap: 0.9rem;
+  max-height: 39rem;
+  overflow: auto;
+  padding-right: 0.2rem;
+
+  &::-webkit-scrollbar {
+    width: 0.4rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.hourlyCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.05rem;
+  border-radius: 0.9rem;
+  background: rgba(59, 54, 95, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.hourlySummary {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+
+  img {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+  }
+}
+
+.hourlyTime {
+  margin: 0;
+  color: $color-white;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.hourlyCondition {
+  margin: 0.15rem 0 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.88rem;
+}
+
+.hourlyTemp {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.15rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 75rem) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .dailyGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 52rem) {
+  .page {
+    padding-top: 1.5rem;
+  }
+
+  .header {
+    margin-bottom: 3rem;
+  }
+
+  .hero {
+    justify-items: stretch;
+  }
+
+  .heroTitle {
+    justify-self: center;
+    font-size: clamp(2.5rem, 11vw, 4rem);
+  }
+
+  .searchForm,
+  .metricsGrid,
+  .dailyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .searchButton {
+    min-height: 3.8rem;
+  }
+
+  .currentCard {
+    min-height: 15rem;
+  }
+
+  .currentContent {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .currentWeather {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+}
