@@ -189,6 +189,18 @@
   }
 }
 
+.searchProgressNotice {
+  width: min(100%, 41rem);
+  margin-top: -1rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  background: rgba(39, 35, 73, 0.98);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
 .dashboard {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 24rem;
@@ -209,6 +221,25 @@
   background-position: center;
   background-size: cover;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.loadingCardState {
+  min-height: 13.6rem;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.8rem;
+}
+
+.loadingIcon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.loadingLabel {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.2rem;
 }
 
 .currentContent {
@@ -335,6 +366,13 @@
   object-fit: contain;
 }
 
+.daySkeletonIcon {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .dayRange {
   width: 100%;
   display: flex;
@@ -409,6 +447,20 @@
   }
 }
 
+.hourlySkeletonIcon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hourlySkeletonText {
+  width: 5rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .hourlyTime {
   margin: 0;
   color: $color-white;
@@ -436,6 +488,58 @@
   color: rgba(255, 255, 255, 0.8);
   font-size: 1rem;
   line-height: 1.5;
+}
+
+.messageState,
+.errorState {
+  min-height: 45vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.messageTitle {
+  margin: 0;
+  color: $color-white;
+  font-family: $font-display;
+  font-size: clamp(2.25rem, 5vw, 3rem);
+  line-height: 1;
+}
+
+.errorIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.errorTitle {
+  margin: 0;
+  color: $color-white;
+  font-family: $font-display;
+  font-size: clamp(3rem, 6vw, 4.1rem);
+  line-height: 0.95;
+}
+
+.errorCopy {
+  max-width: 32rem;
+  margin: 1rem 0 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.retryButton {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 1.2rem;
+  border: 0;
+  border-radius: 0.9rem;
+  background: rgba(53, 48, 84, 0.92);
+  color: $color-white;
+  cursor: pointer;
 }
 
 .srOnly {

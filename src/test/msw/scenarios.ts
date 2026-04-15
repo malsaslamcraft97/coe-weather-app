@@ -28,11 +28,13 @@ export function mockWeatherSuccess() {
       HttpResponse.json(
         makeForecastResponse({
           current: {
+            time: "2025-08-06T15:00",
             temperature_2m: 27,
             apparent_temperature: 29,
             relative_humidity_2m: 74,
             wind_speed_10m: 9,
             precipitation: 2,
+            weather_code: 3,
           },
           hourly: {
             time: ["2025-08-06T15:00", "2025-08-06T16:00"],
@@ -119,6 +121,7 @@ export function mockWeatherPartialForecast() {
       HttpResponse.json(
         makeForecastResponse({
           current: {
+            time: "2025-08-05T15:00",
             temperature_2m: 20,
           },
           hourly: null,
@@ -238,20 +241,24 @@ export function mockWeatherSequentialSearches() {
   const forecastResponses = [
     makeForecastResponse({
       current: {
+        time: "2025-08-05T15:00",
         temperature_2m: 20,
         apparent_temperature: 18,
         relative_humidity_2m: 46,
         wind_speed_10m: 14,
         precipitation: 0,
+        weather_code: 0,
       },
     }),
     makeForecastResponse({
       current: {
+        time: "2025-08-06T15:00",
         temperature_2m: 11,
         apparent_temperature: 8,
         relative_humidity_2m: 68,
         wind_speed_10m: 20,
         precipitation: 4,
+        weather_code: 63,
       },
     }),
   ];

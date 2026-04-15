@@ -1,19 +1,41 @@
 import styles from "../../App.module.scss";
-import type { ForecastDay } from "../../data/weatherMock";
+import type { ForecastDay } from "../../data/weather";
 import { useDailyForecast } from "./useDailyForecast";
 
 type DailyForecastProps = {
   forecastDays: ForecastDay[];
   selectedDay: string;
   onSelectDay: (dayId: string) => void;
+  isLoading?: boolean;
 };
 
 export function DailyForecast({
   forecastDays,
   selectedDay,
   onSelectDay,
+  isLoading = false,
 }: DailyForecastProps) {
   const { title, emptyLabel } = useDailyForecast();
+
+  if (isLoading) {
+    return (
+      <section className={styles.forecastSection}>
+        <h2 className={styles.sectionTitle}>{title}</h2>
+        <div className={styles.dailyGrid}>
+          {Array.from({ length: 7 }, (_, index) => (
+            <article className={styles.dayCard} key={index}>
+              <span className={styles.dayName}>&nbsp;</span>
+              <span className={styles.daySkeletonIcon} />
+              <span className={styles.dayRange}>
+                <span> </span>
+                <span> </span>
+              </span>
+            </article>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   if (forecastDays.length === 0) {
     return (

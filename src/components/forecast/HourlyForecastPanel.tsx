@@ -1,15 +1,17 @@
 import styles from "../../App.module.scss";
-import type { HourlyEntry } from "../../data/weatherMock";
+import type { HourlyEntry } from "../../data/weather";
 import { useHourlyForecastPanel } from "./useHourlyForecastPanel";
 
 type HourlyForecastPanelProps = {
   hourlyForecast: HourlyEntry[];
   selectedDayLabel: string;
+  isLoading?: boolean;
 };
 
 export function HourlyForecastPanel({
   hourlyForecast,
   selectedDayLabel,
+  isLoading = false,
 }: HourlyForecastPanelProps) {
   const { title, displayDayLabel, dropdownIcon, emptyLabel, formatTemperature } =
     useHourlyForecastPanel(selectedDayLabel);
@@ -25,7 +27,17 @@ export function HourlyForecastPanel({
       </div>
 
       <div className={styles.hourlyList}>
-        {hourlyForecast.length === 0 ? (
+        {isLoading ? (
+          Array.from({ length: 8 }, (_, index) => (
+            <article className={styles.hourlyCard} key={index}>
+              <div className={styles.hourlySummary}>
+                <span className={styles.hourlySkeletonIcon} />
+                <div className={styles.hourlySkeletonText} />
+              </div>
+              <p className={styles.hourlyTemp}> </p>
+            </article>
+          ))
+        ) : hourlyForecast.length === 0 ? (
           <p className={styles.emptyState}>{emptyLabel}</p>
         ) : (
           hourlyForecast.map((item) => (

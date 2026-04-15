@@ -1,53 +1,38 @@
-import { FormEvent, useMemo, useState } from "react";
-import {
-  forecastDays,
-  hourlyByDay,
-  type UnitSystem,
-} from "./data/weatherMock";
+import type { FormEvent } from "react";
+import { useAppContext } from "./context/AppProvider";
 
 export function useApp() {
-  const [query, setQuery] = useState("Berlin, Germany");
-  const [selectedDay, setSelectedDay] = useState("tue");
-  const [unitSystem, setUnitSystem] = useState<UnitSystem>("metric");
-  const [isUnitsOpen, setIsUnitsOpen] = useState(false);
+  const { state, dispatch, actions } = useAppContext();
 
-  const currentTemperature = unitSystem === "metric" ? "20°" : "68°";
-
-  const metricCards = useMemo(
-    () => [
-      { label: "Feels Like", value: unitSystem === "metric" ? "18°" : "64°" },
-      { label: "Humidity", value: "46%" },
-      { label: "Wind", value: unitSystem === "metric" ? "14 km/h" : "9 mph" },
-      {
-        label: "Precipitation",
-        value: unitSystem === "metric" ? "0 mm" : "0 in",
-      },
-    ],
-    [unitSystem],
-  );
-
-  const hourlyForecast = hourlyByDay[selectedDay] ?? [];
-  const selectedDayLabel =
-    forecastDays.find((day) => day.id === selectedDay)?.day ?? "Tue";
-
-  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    await actions.searchWeather();
   };
 
+  const forecastDays = state.weather?.forecastDays ?? [];
+  const selectedDayId = state.selectedDayId || forecastDays[0]?.id || "";
+  const selectedDayLabel =
+    forecastDays.find((day) => day.id === selectedDayId)?.day ?? "Tue";
+  const hourlyForecast = state.weather?.hourlyByDay[selectedDayId] ?? [];
+
   return {
-    query,
-    selectedDay,
-    unitSystem,
-    isUnitsOpen,
-    currentTemperature,
-    metricCards,
+    query: state.query,
+    status: state.status,
+    unitSystem: state.unitSystem,
+    isUnitsOpen: state.isUnitsOpen,
+    weather: state.weather,
     forecastDays,
-    hourlyForecast,
+    selectedDay: selectedDayId,
     selectedDayLabel,
-    setQuery,
-    setSelectedDay,
-    setUnitSystem,
-    setIsUnitsOpen,
+    hourlyForecast,
+    errorMessage: state.errorMessage,
+    setQuery: (value: string) => dispatch({ type: "setQuery", payload: value }),
+    setSelectedDay: (value: string) =>
+      dispatch({ type: "selectDay", payload: value }),
+    toggleUnitsMenu: () => dispatch({ type: "toggleUnitsMenu" }),
+    closeUnitsMenu: () => dispatch({ type: "closeUnitsMenu" }),
+    selectUnit: actions.selectUnit,
+    retrySearch: actions.retrySearch,
     handleSearchSubmit,
   };
 }

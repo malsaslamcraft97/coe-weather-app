@@ -8,11 +8,13 @@ type GeocodingResult = {
 
 type ForecastResponse = {
   current: {
+    time?: string;
     temperature_2m?: number | null;
     apparent_temperature?: number | null;
     relative_humidity_2m?: number | null;
     wind_speed_10m?: number | null;
     precipitation?: number | null;
+    weather_code?: number | null;
   } | null;
   hourly?: {
     time?: string[];
@@ -49,11 +51,13 @@ export function makeForecastResponse(
 ): ForecastResponse {
   return {
     current: {
+      time: "2025-08-05T15:00",
       temperature_2m: 20,
       apparent_temperature: 18,
       relative_humidity_2m: 46,
       wind_speed_10m: 14,
       precipitation: 0,
+      weather_code: 0,
     },
     hourly: {
       time: ["2025-08-05T15:00", "2025-08-05T16:00"],

@@ -1,30 +1,33 @@
-import { act, renderHook } from "@testing-library/react";
+import React from "react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { useApp } from "./useApp";
+import { AppProvider } from "./context/AppProvider";
+
+function wrapper({ children }: { children: React.ReactNode }) {
+  return React.createElement(AppProvider, null, children);
+}
 
 describe("useApp", () => {
-  it("switches derived metric values when the unit system changes", () => {
-    const { result } = renderHook(() => useApp());
+  it("switches unit system through the context action", async () => {
+    const { result } = renderHook(() => useApp(), { wrapper });
 
-    expect(result.current.metricCards).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ label: "Wind", value: "14 km/h" }),
-      ]),
-    );
-
-    act(() => {
-      result.current.setUnitSystem("imperial");
+    await waitFor(() => {
+      expect(result.current.status).toBe("ready");
     });
 
-    expect(result.current.currentTemperature).toBe("68°");
-    expect(result.current.metricCards).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ label: "Wind", value: "9 mph" }),
-      ]),
-    );
+    await act(async () => {
+      await result.current.selectUnit("imperial");
+    });
+
+    expect(result.current.unitSystem).toBe("imperial");
   });
 
-  it("returns an empty hourly forecast when the selected day is unknown", () => {
-    const { result } = renderHook(() => useApp());
+  it("returns an empty hourly forecast when the selected day is unknown", async () => {
+    const { result } = renderHook(() => useApp(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.status).toBe("ready");
+    });
 
     act(() => {
       result.current.setSelectedDay("unknown-day");

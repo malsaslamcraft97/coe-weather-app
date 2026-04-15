@@ -1,12 +1,9 @@
-import { currentWeatherCard } from "../../data/weatherMock";
+import bgTodayLarge from "../../../starter-files/assets/images/bg-today-large.svg";
 
 export function useCurrentWeatherCard() {
   return {
-    city: currentWeatherCard.city,
-    dateLabel: currentWeatherCard.dateLabel,
-    icon: currentWeatherCard.icon,
     backgroundStyle: {
-      backgroundImage: `url(${currentWeatherCard.backgroundImage})`,
+      backgroundImage: `url(${bgTodayLarge})`,
     },
   };
 }

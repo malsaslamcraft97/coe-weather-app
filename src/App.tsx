@@ -6,24 +6,34 @@ import { SearchHero } from "./components/search/SearchHero";
 import { CurrentWeatherCard } from "./components/weather/CurrentWeatherCard";
 import { WeatherMetrics } from "./components/weather/WeatherMetrics";
 import { useApp } from "./useApp";
+import errorIcon from "../starter-files/assets/images/icon-error.svg";
+import retryIcon from "../starter-files/assets/images/icon-retry.svg";
 
 function App() {
   const {
     query,
+    status,
     selectedDay,
     unitSystem,
     isUnitsOpen,
-    currentTemperature,
-    metricCards,
+    weather,
     forecastDays,
     hourlyForecast,
     selectedDayLabel,
+    errorMessage,
     setQuery,
     setSelectedDay,
-    setUnitSystem,
-    setIsUnitsOpen,
+    selectUnit,
+    toggleUnitsMenu,
     handleSearchSubmit,
+    retrySearch,
   } = useApp();
+
+  const showDashboard = status === "ready" || status === "searching" || status === "loading";
+  const showSearchProgress = status === "searching";
+  const showLoadingDashboard = status === "loading" && !weather;
+  const showNoResults = status === "no-results";
+  const showError = status === "error";
 
   return (
     <main className={styles.page}>
@@ -31,35 +41,61 @@ function App() {
         <AppHeader
           isUnitsOpen={isUnitsOpen}
           unitSystem={unitSystem}
-          onToggleUnits={() => setIsUnitsOpen((open) => !open)}
-          onSelectUnit={(nextUnit) => {
-            setUnitSystem(nextUnit);
-            setIsUnitsOpen(false);
-          }}
+          onToggleUnits={toggleUnitsMenu}
+          onSelectUnit={selectUnit}
         />
 
         <SearchHero
           query={query}
           onQueryChange={setQuery}
           onSubmit={handleSearchSubmit}
+          searchStatusLabel={showSearchProgress ? "Search in progress" : ""}
         />
 
-        <section className={styles.dashboard}>
-          <div className={styles.mainColumn}>
-            <CurrentWeatherCard temperature={currentTemperature} />
-            <WeatherMetrics metricCards={metricCards} />
-            <DailyForecast
-              forecastDays={forecastDays}
-              selectedDay={selectedDay}
-              onSelectDay={setSelectedDay}
-            />
-          </div>
+        {showNoResults ? (
+          <section className={styles.messageState}>
+            <h2 className={styles.messageTitle}>No search result found!</h2>
+          </section>
+        ) : null}
 
-          <HourlyForecastPanel
-            hourlyForecast={hourlyForecast}
-            selectedDayLabel={selectedDayLabel}
-          />
-        </section>
+        {showError ? (
+          <section className={styles.errorState}>
+            <img className={styles.errorIcon} src={errorIcon} alt="" />
+            <h2 className={styles.errorTitle}>Something went wrong</h2>
+            <p className={styles.errorCopy}>{errorMessage}</p>
+            <button className={styles.retryButton} type="button" onClick={() => void retrySearch()}>
+              <img src={retryIcon} alt="" />
+              Retry
+            </button>
+          </section>
+        ) : null}
+
+        {showDashboard ? (
+          <section className={styles.dashboard}>
+            <div className={styles.mainColumn}>
+              <CurrentWeatherCard
+                weatherCard={weather?.currentCard ?? null}
+                isLoading={showLoadingDashboard}
+              />
+              <WeatherMetrics
+                metricCards={weather?.metricCards ?? []}
+                isLoading={showLoadingDashboard}
+              />
+              <DailyForecast
+                forecastDays={forecastDays}
+                selectedDay={selectedDay}
+                onSelectDay={setSelectedDay}
+                isLoading={showLoadingDashboard}
+              />
+            </div>
+
+            <HourlyForecastPanel
+              hourlyForecast={hourlyForecast}
+              selectedDayLabel={showLoadingDashboard ? "-" : selectedDayLabel}
+              isLoading={showLoadingDashboard}
+            />
+          </section>
+        ) : null}
       </div>
     </main>
   );

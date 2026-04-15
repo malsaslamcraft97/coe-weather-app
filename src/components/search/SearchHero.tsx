@@ -6,12 +6,14 @@ type SearchHeroProps = {
   query: string;
   onQueryChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  searchStatusLabel?: string;
 };
 
 export function SearchHero({
   query,
   onQueryChange,
   onSubmit,
+  searchStatusLabel,
 }: SearchHeroProps) {
   const { title, placeholder, searchIcon } = useSearchHero();
 
@@ -35,6 +37,10 @@ export function SearchHero({
           Search
         </button>
       </form>
+
+      {searchStatusLabel ? (
+        <div className={styles.searchProgressNotice}>{searchStatusLabel}</div>
+      ) : null}
     </section>
   );
 }

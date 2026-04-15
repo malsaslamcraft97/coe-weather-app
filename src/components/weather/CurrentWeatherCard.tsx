@@ -1,27 +1,51 @@
 import styles from "../../App.module.scss";
 import { useCurrentWeatherCard } from "./useCurrentWeatherCard";
+import loadingIcon from "../../../starter-files/assets/images/icon-loading.svg";
+import type { CurrentWeatherCardData } from "../../data/weather";
 
 type CurrentWeatherCardProps = {
-  temperature: string;
+  weatherCard: CurrentWeatherCardData | null;
+  isLoading: boolean;
 };
 
 export function CurrentWeatherCard({
-  temperature,
+  weatherCard,
+  isLoading,
 }: CurrentWeatherCardProps) {
-  const { backgroundStyle, city, dateLabel, icon } =
-    useCurrentWeatherCard();
+  const { backgroundStyle } = useCurrentWeatherCard();
+
+  if (isLoading) {
+    return (
+      <article className={styles.currentCard}>
+        <div className={styles.loadingCardState}>
+          <img className={styles.loadingIcon} src={loadingIcon} alt="" />
+          <p className={styles.loadingLabel}>Loading...</p>
+        </div>
+      </article>
+    );
+  }
+
+  if (!weatherCard) {
+    return (
+      <article className={styles.currentCard}>
+        <div className={styles.loadingCardState}>
+          <p className={styles.loadingLabel}>Weather unavailable.</p>
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article className={styles.currentCard} style={backgroundStyle}>
       <div className={styles.currentContent}>
         <div>
-          <h2 className={styles.location}>{city}</h2>
-          <p className={styles.date}>{dateLabel}</p>
+          <h2 className={styles.location}>{weatherCard.city}</h2>
+          <p className={styles.date}>{weatherCard.dateLabel}</p>
         </div>
 
         <div className={styles.currentWeather}>
-          <img src={icon} alt="" />
-          <p className={styles.currentTemperature}>{temperature}</p>
+          <img src={weatherCard.icon} alt="" />
+          <p className={styles.currentTemperature}>{weatherCard.temperature}</p>
         </div>
       </div>
     </article>

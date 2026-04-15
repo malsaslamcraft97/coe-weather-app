@@ -1,6 +1,6 @@
 import drizzleIcon from "../../../starter-files/assets/images/icon-drizzle.webp";
 import sunnyIcon from "../../../starter-files/assets/images/icon-sunny.webp";
-import type { ForecastDay, HourlyEntry } from "../../data/weatherMock";
+import type { ForecastDay, HourlyEntry } from "../../data/weather";
 
 type MetricCard = {
   label: string;
