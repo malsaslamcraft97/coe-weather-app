@@ -1,5 +1,6 @@
-describe("Weather app", () => {
+describe("Weather app (authenticated)", () => {
   beforeEach(() => {
+    // Mock APIs
     cy.intercept("GET", "**/v1/search*", {
       statusCode: 200,
       body: {
@@ -15,33 +16,48 @@ describe("Weather app", () => {
       },
     }).as("searchLocation");
 
-    cy.intercept("GET", "**/v1/forecast*", {
-      statusCode: 200,
-      body: {
-        current: {
-          time: "2025-08-05T15:00",
-          temperature_2m: 20,
-          apparent_temperature: 18,
-          relative_humidity_2m: 46,
-          precipitation: 0,
-          weather_code: 0,
-          wind_speed_10m: 14,
+    cy.intercept("GET", "**/v1/forecast*", (req) => {
+      const url = new URL(req.url);
+      const isImperial =
+        url.searchParams.get("temperature_unit") === "fahrenheit";
+
+      req.reply({
+        statusCode: 200,
+        body: {
+          current: {
+            time: "2025-08-05T15:00",
+            temperature_2m: isImperial ? 68 : 20,
+            apparent_temperature: isImperial ? 64 : 18,
+            relative_humidity_2m: 46,
+            precipitation: 0,
+            weather_code: 0,
+            wind_speed_10m: isImperial ? 9 : 14,
+          },
+          hourly: {
+            time: ["2025-08-05T15:00", "2025-08-05T16:00"],
+            temperature_2m: isImperial ? [68, 66] : [20, 19],
+            weather_code: [0, 3],
+          },
+          daily: {
+            time: ["2025-08-05", "2025-08-06"],
+            weather_code: [0, 63],
+            temperature_2m_max: isImperial ? [68, 70] : [20, 21],
+            temperature_2m_min: isImperial ? [57, 59] : [14, 15],
+          },
         },
-        hourly: {
-          time: ["2025-08-05T15:00", "2025-08-05T16:00"],
-          temperature_2m: [20, 19],
-          weather_code: [0, 3],
-        },
-        daily: {
-          time: ["2025-08-05", "2025-08-06"],
-          weather_code: [0, 63],
-          temperature_2m_max: [20, 21],
-          temperature_2m_min: [14, 15],
-        },
-      },
+      });
     }).as("fetchForecast");
 
+    cy.intercept("POST", "/api/login", {
+      statusCode: 200,
+      body: { token: "fake-token" },
+    }).as("login");
+
+    // Visit and login
     cy.visit("/", { timeout: 30000 });
+
+    cy.get('[data-testid="login-button"]').click();
+    cy.wait("@login");
   });
 
   it("renders API-backed weather data on first load", () => {
@@ -121,17 +137,15 @@ describe("Weather app", () => {
     cy.wait("@searchLocation");
     cy.wait("@fetchForecast");
 
-    // Labels
     cy.contains("Feels Like").should("be.visible");
     cy.contains("Humidity").should("be.visible");
     cy.contains("Wind").should("be.visible");
     cy.contains("Precipitation").should("be.visible");
 
-    // Values (use partial match for robustness)
     cy.contains("18°").should("be.visible");
-    cy.contains("46").should("be.visible"); // humidity %
-    cy.contains("14").should("be.visible"); // wind speed
-    cy.contains("0").should("be.visible"); // precipitation
+    cy.contains("46").should("be.visible");
+    cy.contains("14").should("be.visible");
+    cy.contains("0").should("be.visible");
   });
 
   it("toggles temperature units from Celsius to Fahrenheit", () => {
@@ -144,6 +158,8 @@ describe("Weather app", () => {
     cy.get('[data-testid="units-dropdown"]').should("be.visible");
 
     cy.contains("Fahrenheit").click();
+
+    cy.wait("@fetchForecast");
 
     cy.contains("68°").should("be.visible");
   });
@@ -162,8 +178,31 @@ describe("Weather app", () => {
 
     cy.contains("Fahrenheit").click();
 
-    cy.contains("Fahrenheit").should("not.exist");
+    cy.wait("@fetchForecast");
 
     cy.contains("68°").should("be.visible");
+  });
+});
+
+describe("Auth flow", () => {
+  it("shows login screen before authentication", () => {
+    cy.visit("/");
+
+    cy.contains("Login").should("be.visible");
+    cy.contains("Hourly forecast").should("not.exist");
+  });
+
+  it("logs in successfully and shows weather app", () => {
+    cy.intercept("POST", "/api/login", {
+      statusCode: 200,
+      body: { token: "fake-token" },
+    }).as("login");
+
+    cy.visit("/");
+
+    cy.get('[data-testid="login-button"]').click();
+    cy.wait("@login");
+
+    cy.contains("Hourly forecast").should("be.visible");
   });
 });

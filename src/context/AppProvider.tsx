@@ -20,6 +20,7 @@ type AppState = {
   selectedDayId: string;
   lastSearchQuery: string;
   errorMessage: string;
+  isAuthenticated: boolean;
 };
 
 type AppAction =
@@ -31,7 +32,9 @@ type AppAction =
   | { type: "fetchStart"; payload: { preserveData: boolean; query: string } }
   | { type: "fetchSuccess"; payload: WeatherViewModel }
   | { type: "fetchNoResults"; payload: string }
-  | { type: "fetchError"; payload: string };
+  | { type: "fetchError"; payload: string }
+  | { type: "loginSuccess" }
+  | { type: "logout" };
 
 type AppContextValue = {
   state: AppState;
@@ -40,6 +43,7 @@ type AppContextValue = {
     searchWeather: (queryOverride?: string) => Promise<void>;
     retrySearch: () => Promise<void>;
     selectUnit: (unit: UnitSystem) => Promise<void>;
+    login: () => Promise<void>;
   };
 };
 
@@ -54,6 +58,7 @@ const initialState: AppState = {
   selectedDayId: "",
   lastSearchQuery: "Berlin",
   errorMessage: "",
+  isAuthenticated: false,
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
@@ -97,6 +102,17 @@ function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         status: "error",
         errorMessage: action.payload,
+      };
+    case "loginSuccess":
+      return {
+        ...state,
+        isAuthenticated: true,
+      };
+
+    case "logout":
+      return {
+        ...state,
+        isAuthenticated: false,
       };
     default:
       return state;
@@ -168,7 +184,8 @@ export function AppProvider({ children }: PropsWithChildren) {
   const selectUnit = async (unit: UnitSystem) => {
     dispatch({ type: "setUnitSystem", payload: unit });
 
-    const query = state.weather?.locationQuery || state.lastSearchQuery || state.query;
+    const query =
+      state.weather?.locationQuery || state.lastSearchQuery || state.query;
     const requestId = activeRequestRef.current + 1;
     activeRequestRef.current = requestId;
 
@@ -210,6 +227,14 @@ export function AppProvider({ children }: PropsWithChildren) {
     }
   };
 
+  const login = async () => {
+    const res = await fetch("/api/login", { method: "POST" });
+
+    if (res.ok) {
+      dispatch({ type: "loginSuccess" });
+    }
+  };
+
   useEffect(() => {
     void searchWeather(initialState.query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -220,7 +245,7 @@ export function AppProvider({ children }: PropsWithChildren) {
       value={{
         state,
         dispatch,
-        actions: { searchWeather, retrySearch, selectUnit },
+        actions: { searchWeather, retrySearch, selectUnit, login },
       }}
     >
       {children}
