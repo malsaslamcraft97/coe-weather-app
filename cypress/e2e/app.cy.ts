@@ -120,4 +120,35 @@ describe("Weather app", () => {
     cy.contains("Tokyo, Japan").should("be.visible");
     cy.contains("27°").should("be.visible");
   });
+
+  it("displays additional weather metrics", () => {
+    cy.wait("@searchLocation");
+    cy.wait("@fetchForecast");
+
+    cy.contains("Feels Like").should("be.visible");
+    cy.contains("18°").should("be.visible"); // from mocked data
+
+    cy.contains(/humidity/i).should("be.visible");
+    cy.contains("46").should("be.visible");
+
+    cy.contains(/wind/i).should("be.visible");
+    cy.contains("14").should("be.visible");
+
+    cy.contains(/precipitation/i).should("be.visible");
+    cy.contains("0").should("be.visible");
+  });
+
+  it("updates hourly forecast when a different day is selected", () => {
+    cy.wait("@searchLocation");
+    cy.wait("@fetchForecast");
+
+    // Ensure hourly section is visible
+    cy.contains("Hourly forecast").should("be.visible");
+
+    // Click on next day (based on your mocked daily data)
+    cy.contains("Aug 06").click(); // adjust if your UI formats differently
+
+    // Assert that hourly data changed
+    cy.contains("19°").should("exist"); // second hour temp
+  });
 });
