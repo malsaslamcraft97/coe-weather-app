@@ -150,4 +150,28 @@ describe("Weather app", () => {
     // Verify temperature converted (20°C → 68°F)
     cy.contains("68°").should("be.visible");
   });
+
+  it("opens units dropdown and selects Fahrenheit", () => {
+    cy.wait("@searchLocation");
+    cy.wait("@fetchForecast");
+
+    // Initially dropdown options should NOT be visible
+    cy.contains("Fahrenheit").should("not.exist");
+
+    // Open dropdown
+    cy.contains("Units").click();
+
+    // Now options should appear
+    cy.contains("Celsius").should("be.visible");
+    cy.contains("Fahrenheit").should("be.visible");
+
+    // Select Fahrenheit
+    cy.contains("Fahrenheit").click();
+
+    // Dropdown should close (optional but good)
+    cy.contains("Fahrenheit").should("not.exist");
+
+    // Temperature updated
+    cy.contains("68°").should("be.visible");
+  });
 });
