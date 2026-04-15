@@ -1,4 +1,5 @@
 import styles from "../../App.module.scss";
+import { useAppContext } from "../../context/AppProvider";
 import type { HourlyEntry } from "../../data/weather";
 import { useHourlyForecastPanel } from "./useHourlyForecastPanel";
 
@@ -6,17 +7,19 @@ type HourlyForecastPanelProps = {
   hourlyForecast: HourlyEntry[];
   selectedDayLabel: string;
   isLoading?: boolean;
-  unit: "C" | "F";
-  setUnit: (unit: "C" | "F") => void;
+  // unit: "C" | "F";
+  // setUnit: (unit: "C" | "F") => void;
 };
 
 export function HourlyForecastPanel({
   hourlyForecast,
   selectedDayLabel,
   isLoading = false,
-  unit,
-  setUnit,
+  // unit,
+  // setUnit,
 }: HourlyForecastPanelProps) {
+  const { actions } = useAppContext();
+
   const {
     title,
     displayDayLabel,
@@ -27,7 +30,7 @@ export function HourlyForecastPanel({
     setSelectedDayIndex,
     isUnitOpen,
     setIsUnitOpen,
-  } = useHourlyForecastPanel(selectedDayLabel, unit);
+  } = useHourlyForecastPanel(selectedDayLabel);
 
   // ✅ Minimal filtering logic for GREEN step (E2E Test)
   const filteredForecast =
@@ -61,7 +64,7 @@ export function HourlyForecastPanel({
             <div data-testid="units-dropdown">
               <button
                 onClick={() => {
-                  setUnit("C");
+                  actions.selectUnit("metric"); // Celsius
                   setIsUnitOpen(false);
                 }}
               >
@@ -70,7 +73,7 @@ export function HourlyForecastPanel({
 
               <button
                 onClick={() => {
-                  setUnit("F");
+                  actions.selectUnit("imperial"); // Fahrenheit
                   setIsUnitOpen(false);
                 }}
               >
