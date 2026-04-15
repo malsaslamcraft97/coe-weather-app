@@ -1,6 +1,6 @@
 describe("Weather app", () => {
   beforeEach(() => {
-    cy.intercept("GET", "https://geocoding-api.open-meteo.com/v1/search*", {
+    cy.intercept("GET", "**/v1/search*", {
       statusCode: 200,
       body: {
         results: [
@@ -14,11 +14,8 @@ describe("Weather app", () => {
         ],
       },
     }).as("searchLocation");
-    beforeEach(() => {
-      cy.visit("/", { timeout: 30000 });
-    });
 
-    cy.intercept("GET", "https://api.open-meteo.com/v1/forecast*", {
+    cy.intercept("GET", "**/v1/forecast*", {
       statusCode: 200,
       body: {
         current: {
@@ -43,6 +40,9 @@ describe("Weather app", () => {
         },
       },
     }).as("fetchForecast");
+
+    // fix for wantedly nested beforeEach error that was raised for RED test
+    cy.visit("/", { timeout: 30000 });
   });
 
   it("renders API-backed weather data on first load", () => {
