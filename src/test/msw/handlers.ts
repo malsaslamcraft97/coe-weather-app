@@ -12,4 +12,7 @@ export const defaultHandlers = [
   http.get("https://api.open-meteo.com/v1/forecast", () =>
     HttpResponse.json(makeForecastResponse()),
   ),
+  http.post("/api/login", async () => {
+    return HttpResponse.json({ token: "fake-token" });
+  }),
 ];
