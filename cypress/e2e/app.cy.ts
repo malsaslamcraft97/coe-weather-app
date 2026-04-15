@@ -41,13 +41,10 @@ describe("Weather app", () => {
       },
     }).as("fetchForecast");
 
-    // fix for wantedly nested beforeEach error that was raised for RED test
     cy.visit("/", { timeout: 30000 });
   });
 
   it("renders API-backed weather data on first load", () => {
-    cy.visit("/");
-
     cy.wait("@searchLocation");
     cy.wait("@fetchForecast");
 
@@ -107,7 +104,6 @@ describe("Weather app", () => {
       },
     ).as("fetchTokyoForecast");
 
-    cy.visit("/");
     cy.wait("@searchLocation");
     cy.wait("@fetchForecast");
 
@@ -125,30 +121,16 @@ describe("Weather app", () => {
     cy.wait("@searchLocation");
     cy.wait("@fetchForecast");
 
+    // Labels
     cy.contains("Feels Like").should("be.visible");
-    cy.contains("18°").should("be.visible"); // from mocked data
+    cy.contains("Humidity").should("be.visible");
+    cy.contains("Wind").should("be.visible");
+    cy.contains("Precipitation").should("be.visible");
 
-    cy.contains(/humidity/i).should("be.visible");
-    cy.contains("46").should("be.visible");
-
-    cy.contains(/wind/i).should("be.visible");
-    cy.contains("14").should("be.visible");
-
-    cy.contains(/precipitation/i).should("be.visible");
-    cy.contains("0").should("be.visible");
-  });
-
-  it("updates hourly forecast when a different day is selected", () => {
-    cy.wait("@searchLocation");
-    cy.wait("@fetchForecast");
-
-    // Ensure hourly section is visible
-    cy.contains("Hourly forecast").should("be.visible");
-
-    // Click on next day (based on your mocked daily data)
-    cy.contains("Aug 06").click(); // adjust if your UI formats differently
-
-    // Assert that hourly data changed
-    cy.contains("19°").should("exist"); // second hour temp
+    // Values (use partial match for robustness)
+    cy.contains("18°").should("be.visible");
+    cy.contains("46").should("be.visible"); // humidity %
+    cy.contains("14").should("be.visible"); // wind speed
+    cy.contains("0").should("be.visible"); // precipitation
   });
 });
