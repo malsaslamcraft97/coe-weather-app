@@ -213,3 +213,13 @@ Before writing many tests, add a real testing stack and a thin API boundary:
 5. Start with component tests that use stubs and spies
 
 That sequence gives us stable, maintainable tests instead of brittle snapshots or network-heavy test suites.
+
+## Phase note
+
+Current phase separation in this repo:
+
+- `RED`: app-level API integration expectations live in `src/App.api.test.tsx`
+- `GREEN`: the MSW scenario layer is fully set up and verified in `src/test/msw/scenarios.test.ts`
+- `REFACTOR`: wire the real app flow to a weather client and then re-enable the app-level API tests
+
+This keeps our mocks trustworthy now without pretending the UI already performs live API integration.
