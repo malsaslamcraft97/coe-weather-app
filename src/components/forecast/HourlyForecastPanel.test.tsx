@@ -1,0 +1,45 @@
+import { render, screen } from "@testing-library/react";
+import { HourlyForecastPanel } from "./HourlyForecastPanel";
+import { makeHourlyEntry } from "../../test/test-doubles/weather";
+
+describe("HourlyForecastPanel", () => {
+  it("renders hourly entries with their conditions and temperatures", () => {
+    render(
+      <HourlyForecastPanel
+        hourlyForecast={[
+          makeHourlyEntry({
+            time: "3 PM",
+            condition: "Sunny with occasional cloud breaks",
+            temperature: 20,
+          }),
+        ]}
+        selectedDayLabel="Tue"
+      />,
+    );
+
+    expect(screen.getByText(/sunny with occasional cloud breaks/i)).toBeInTheDocument();
+    expect(screen.getByText("20°")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /tuesday/i })).toBeInTheDocument();
+  });
+
+  it("shows an empty state when no hourly entries exist", () => {
+    render(<HourlyForecastPanel hourlyForecast={[]} selectedDayLabel="Tue" />);
+
+    expect(
+      screen.getByText(/no hourly forecast is available for this day yet/i),
+    ).toBeInTheDocument();
+  });
+
+  it("renders a fallback temperature when the value is missing", () => {
+    render(
+      <HourlyForecastPanel
+        hourlyForecast={[
+          makeHourlyEntry({ time: "4 PM", temperature: undefined as never }),
+        ]}
+        selectedDayLabel="Wed"
+      />,
+    );
+
+    expect(screen.getByText("--")).toBeInTheDocument();
+  });
+});
