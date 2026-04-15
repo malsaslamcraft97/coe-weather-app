@@ -21,6 +21,8 @@ export function HourlyForecastPanel({
     formatTemperature,
     selectedDayIndex,
     setSelectedDayIndex,
+    unit,
+    setUnit,
   } = useHourlyForecastPanel(selectedDayLabel);
 
   // ✅ Minimal filtering logic for GREEN step (E2E Test)
@@ -42,6 +44,12 @@ export function HourlyForecastPanel({
           <span>{displayDayLabel}</span>
           <img src={dropdownIcon} alt="" />
         </button>
+
+        <div>
+          <button>Units</button>
+          <button onClick={() => setUnit("C")}>Celsius</button>
+          <button onClick={() => setUnit("F")}>Fahrenheit</button>
+        </div>
       </div>
 
       <div className={styles.hourlyList}>
