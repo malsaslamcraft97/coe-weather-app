@@ -299,7 +299,7 @@ npm run build
 - Open-Meteo Weather Forecast API: https://open-meteo.com/en/docs
 - Open-Meteo Geocoding API: https://open-meteo.com/en/docs/geocoding-api
 
-## Notes
+## Notes & ToDo
 
 - State management currently uses `useReducer` + React Context, as requested.
 - The build passes, and the test suite is green.
