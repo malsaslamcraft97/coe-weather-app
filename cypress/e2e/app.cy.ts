@@ -207,6 +207,10 @@ describe("Auth flow", () => {
 
     cy.visit("/");
 
+    // ✅ MUST fill form
+    cy.get('[data-testid="email-input"]').type("test@test.com");
+    cy.get('[data-testid="password-input"]').type("123456");
+
     cy.get('[data-testid="login-button"]').click();
     cy.wait("@login");
 
@@ -221,6 +225,9 @@ describe("Auth flow", () => {
 
     cy.visit("/");
 
+    // ✅ login first
+    cy.get('[data-testid="email-input"]').type("test@test.com");
+    cy.get('[data-testid="password-input"]').type("123456");
     cy.get('[data-testid="login-button"]').click();
     cy.wait("@login");
 
@@ -236,6 +243,8 @@ describe("Auth flow", () => {
     cy.visit("/");
 
     // Login first
+    cy.get('[data-testid="email-input"]').type("test@test.com");
+    cy.get('[data-testid="password-input"]').type("123456");
     cy.get('[data-testid="login-button"]').click();
     cy.wait("@login");
 
