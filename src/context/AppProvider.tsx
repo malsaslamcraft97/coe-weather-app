@@ -104,6 +104,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         errorMessage: action.payload,
       };
     case "loginSuccess":
+      console.log("LOGIN SUCCESS 🔥");
       return {
         ...state,
         isAuthenticated: true,
@@ -228,11 +229,10 @@ export function AppProvider({ children }: PropsWithChildren) {
   };
 
   const login = async () => {
-    const res = await fetch("/api/login", { method: "POST" });
+    // ✅ simulate success (since no backend)
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
-    if (res.ok) {
-      dispatch({ type: "loginSuccess" });
-    }
+    dispatch({ type: "loginSuccess" });
   };
 
   useEffect(() => {

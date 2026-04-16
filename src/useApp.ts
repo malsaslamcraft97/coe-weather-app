@@ -14,8 +14,10 @@ export function useApp() {
   const selectedDayId = state.selectedDayId || forecastDays[0]?.id || "";
   const selectedDayLabel =
     forecastDays.find((day) => day.id === selectedDayId)?.day ?? "Tue";
-  const hourlyForecast = state.weather?.hourlyByDay[selectedDayId] ?? [];
 
+  const hourlyForecast = state.weather?.hourlyByDay?.[selectedDayId] ?? [];
+
+  // ✅ IMPORTANT: use reducer directly (single source of truth)
   const logout = () => {
     dispatch({ type: "logout" });
   };
@@ -31,17 +33,22 @@ export function useApp() {
     selectedDayLabel,
     hourlyForecast,
     errorMessage: state.errorMessage,
+
     setQuery: (value: string) => dispatch({ type: "setQuery", payload: value }),
+
     setSelectedDay: (value: string) =>
       dispatch({ type: "selectDay", payload: value }),
+
     toggleUnitsMenu: () => dispatch({ type: "toggleUnitsMenu" }),
     closeUnitsMenu: () => dispatch({ type: "closeUnitsMenu" }),
+
     selectUnit: actions.selectUnit,
     retrySearch: actions.retrySearch,
     handleSearchSubmit,
+
     unit,
     setUnit,
 
-    logout,
+    logout, // ✅ clean + consistent
   };
 }

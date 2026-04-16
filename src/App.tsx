@@ -14,7 +14,7 @@ import { Login } from "./components/auth/Login";
 function App() {
   const { state } = useAppContext();
 
-  // ✅ AUTH GUARD
+  // ✅ AUTH GUARD (routing)
   if (!state.isAuthenticated) {
     return <Login />;
   }
@@ -36,8 +36,6 @@ function App() {
     toggleUnitsMenu,
     handleSearchSubmit,
     retrySearch,
-    unit,
-    setUnit,
     logout,
   } = useApp();
 
@@ -56,7 +54,7 @@ function App() {
           unitSystem={unitSystem}
           onToggleUnits={toggleUnitsMenu}
           onSelectUnit={selectUnit}
-          onLogout={logout}
+          onLogout={logout} // ✅ now properly wired
         />
 
         <SearchHero
@@ -66,13 +64,13 @@ function App() {
           searchStatusLabel={showSearchProgress ? "Search in progress" : ""}
         />
 
-        {showNoResults ? (
+        {showNoResults && (
           <section className={styles.messageState}>
             <h2 className={styles.messageTitle}>No search result found!</h2>
           </section>
-        ) : null}
+        )}
 
-        {showError ? (
+        {showError && (
           <section className={styles.errorState}>
             <img className={styles.errorIcon} src={errorIcon} alt="" />
             <h2 className={styles.errorTitle}>Something went wrong</h2>
@@ -86,9 +84,9 @@ function App() {
               Retry
             </button>
           </section>
-        ) : null}
+        )}
 
-        {showDashboard ? (
+        {showDashboard && (
           <section className={styles.dashboard}>
             <div className={styles.mainColumn}>
               <CurrentWeatherCard
@@ -113,7 +111,7 @@ function App() {
               isLoading={showLoadingDashboard}
             />
           </section>
-        ) : null}
+        )}
       </div>
     </main>
   );
