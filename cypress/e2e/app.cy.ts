@@ -48,15 +48,22 @@ describe("Weather app (authenticated)", () => {
       });
     }).as("fetchForecast");
 
-    cy.intercept("POST", "/api/login", {
+    // Mock login API
+    cy.intercept("POST", "**/api/login", {
       statusCode: 200,
       body: { token: "fake-token" },
     }).as("login");
 
-    // Visit and login
+    // Visit app
     cy.visit("/", { timeout: 30000 });
 
+    // ✅ IMPORTANT: Fill form (otherwise login won't fire)
+    cy.get('[data-testid="email-input"]').type("test@test.com");
+    cy.get('[data-testid="password-input"]').type("123456");
+
     cy.get('[data-testid="login-button"]').click();
+
+    // ✅ Wait for login request
     cy.wait("@login");
   });
 

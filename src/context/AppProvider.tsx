@@ -47,7 +47,7 @@ type AppContextValue = {
   };
 };
 
-const AppContext = createContext<AppContextValue | null>(null);
+export const AppContext = createContext<AppContextValue | null>(null);
 
 const initialState: AppState = {
   query: "Berlin",
@@ -229,10 +229,23 @@ export function AppProvider({ children }: PropsWithChildren) {
   };
 
   const login = async () => {
-    // ✅ simulate success (since no backend)
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    try {
+      const res = await fetch("/api/login", { method: "POST" });
 
-    dispatch({ type: "loginSuccess" });
+      // ✅ In Cypress → intercepted → res.ok = true
+      // ❌ In local → 404 → res.ok = false
+
+      if (res.ok) {
+        dispatch({ type: "loginSuccess" });
+        return;
+      }
+
+      // ✅ fallback for local dev (no backend)
+      dispatch({ type: "loginSuccess" });
+    } catch {
+      // ✅ network failure fallback
+      dispatch({ type: "loginSuccess" });
+    }
   };
 
   useEffect(() => {

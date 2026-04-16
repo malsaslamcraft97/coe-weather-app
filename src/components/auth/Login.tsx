@@ -10,17 +10,24 @@ export function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login Clicked!");
 
-    // ✅ Basic validation (TDD friendly)
     if (!email || !password) {
       setError("Email and password are required");
       return;
     }
 
-    setError("");
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("Please enter a valid email");
+      return;
+    }
 
-    await actions.login(); // 🔥 THIS WAS MISSING
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    setError("");
+    await actions.login();
   };
 
   return (
