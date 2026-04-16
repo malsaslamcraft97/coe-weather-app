@@ -205,4 +205,40 @@ describe("Auth flow", () => {
 
     cy.contains("Hourly forecast").should("be.visible");
   });
+
+  it("navigates from login screen to dashboard after login", () => {
+    cy.intercept("POST", "/api/login", {
+      statusCode: 200,
+      body: { token: "fake-token" },
+    }).as("login");
+
+    cy.visit("/");
+
+    cy.get('[data-testid="login-button"]').click();
+    cy.wait("@login");
+
+    cy.contains("Hourly forecast").should("be.visible");
+  });
+
+  it("logs out and navigates back to login screen", () => {
+    cy.intercept("POST", "/api/login", {
+      statusCode: 200,
+      body: { token: "fake-token" },
+    }).as("login");
+
+    cy.visit("/");
+
+    // Login first
+    cy.get('[data-testid="login-button"]').click();
+    cy.wait("@login");
+
+    cy.contains("Hourly forecast").should("be.visible");
+
+    // ❌ This will fail (no logout yet)
+    cy.get('[data-testid="logout-button"]').click();
+
+    // Expect navigation back to login
+    cy.contains("Login").should("be.visible");
+    cy.contains("Hourly forecast").should("not.exist");
+  });
 });
