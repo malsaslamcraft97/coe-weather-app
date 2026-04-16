@@ -38,6 +38,7 @@ function App() {
     retrySearch,
     unit,
     setUnit,
+    logout,
   } = useApp();
 
   const showDashboard =
@@ -55,6 +56,7 @@ function App() {
           unitSystem={unitSystem}
           onToggleUnits={toggleUnitsMenu}
           onSelectUnit={selectUnit}
+          onLogout={logout}
         />
 
         <SearchHero
@@ -109,8 +111,6 @@ function App() {
               hourlyForecast={hourlyForecast}
               selectedDayLabel={showLoadingDashboard ? "-" : selectedDayLabel}
               isLoading={showLoadingDashboard}
-              unit={unit}
-              setUnit={setUnit}
             />
           </section>
         ) : null}

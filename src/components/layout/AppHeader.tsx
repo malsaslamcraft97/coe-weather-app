@@ -6,6 +6,7 @@ type AppHeaderProps = {
   unitSystem: "metric" | "imperial";
   onToggleUnits: () => void;
   onSelectUnit: (unit: "metric" | "imperial") => void;
+  onLogout: () => void;
 };
 
 export function AppHeader(props: AppHeaderProps) {
@@ -48,6 +49,11 @@ export function AppHeader(props: AppHeaderProps) {
             ))}
           </div>
         ) : null}
+
+        {/* ✅ GREEN FIX */}
+        <button data-testid="logout-button" onClick={props.onLogout}>
+          Logout
+        </button>
       </div>
     </header>
   );

@@ -16,6 +16,10 @@ export function useApp() {
     forecastDays.find((day) => day.id === selectedDayId)?.day ?? "Tue";
   const hourlyForecast = state.weather?.hourlyByDay[selectedDayId] ?? [];
 
+  const logout = () => {
+    dispatch({ type: "logout" });
+  };
+
   return {
     query: state.query,
     status: state.status,
@@ -37,5 +41,7 @@ export function useApp() {
     handleSearchSubmit,
     unit,
     setUnit,
+
+    logout,
   };
 }
