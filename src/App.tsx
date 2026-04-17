@@ -8,8 +8,6 @@ import { WeatherMetrics } from "./components/weather/WeatherMetrics";
 import { useApp } from "./useApp";
 import errorIcon from "../starter-files/assets/images/icon-error.svg";
 import retryIcon from "../starter-files/assets/images/icon-retry.svg";
-import { useAppContext } from "./context/AppProvider";
-import { Login } from "./components/auth/Login";
 import { withAuth } from "./components/auth/withAuth";
 
 function App() {
