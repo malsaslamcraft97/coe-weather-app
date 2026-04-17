@@ -104,12 +104,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
         errorMessage: action.payload,
       };
     case "loginSuccess":
-      console.log("LOGIN SUCCESS 🔥");
       return {
         ...state,
         isAuthenticated: true,
       };
-
     case "logout":
       return {
         ...state,
@@ -124,69 +122,7 @@ export function AppProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const activeRequestRef = useRef(0);
 
-  const searchWeather = async (queryOverride?: string) => {
-    const nextQuery = (queryOverride ?? state.query).trim();
-
-    if (!nextQuery) {
-      dispatch({ type: "fetchNoResults", payload: nextQuery });
-      return;
-    }
-
-    const requestId = activeRequestRef.current + 1;
-    activeRequestRef.current = requestId;
-
-    dispatch({
-      type: "fetchStart",
-      payload: { preserveData: Boolean(state.weather), query: nextQuery },
-    });
-
-    try {
-      const locations = await searchLocation(nextQuery);
-
-      if (activeRequestRef.current !== requestId) {
-        return;
-      }
-
-      if (locations.length === 0) {
-        dispatch({ type: "fetchNoResults", payload: nextQuery });
-        return;
-      }
-
-      const forecast = await fetchForecast(locations[0], state.unitSystem);
-
-      if (activeRequestRef.current !== requestId) {
-        return;
-      }
-
-      const weather = toWeatherViewModel(
-        locations[0],
-        forecast,
-        state.unitSystem,
-      );
-
-      dispatch({ type: "fetchSuccess", payload: weather });
-    } catch {
-      if (activeRequestRef.current !== requestId) {
-        return;
-      }
-
-      dispatch({
-        type: "fetchError",
-        payload:
-          "We couldn’t connect to the server (API error). Please try again in a few moments.",
-      });
-    }
-  };
-
-  const retrySearch = async () => {
-    await searchWeather(state.lastSearchQuery || state.query);
-  };
-
-  const selectUnit = async (unit: UnitSystem) => {
-    dispatch({ type: "setUnitSystem", payload: unit });
-
-    const query =
-      state.weather?.locationQuery || state.lastSearchQuery || state.query;
+  const performSearch = async (query: string, unit: UnitSystem) => {
     const requestId = activeRequestRef.current + 1;
     activeRequestRef.current = requestId;
 
@@ -198,9 +134,7 @@ export function AppProvider({ children }: PropsWithChildren) {
     try {
       const locations = await searchLocation(query);
 
-      if (activeRequestRef.current !== requestId) {
-        return;
-      }
+      if (activeRequestRef.current !== requestId) return;
 
       if (locations.length === 0) {
         dispatch({ type: "fetchNoResults", payload: query });
@@ -209,16 +143,13 @@ export function AppProvider({ children }: PropsWithChildren) {
 
       const forecast = await fetchForecast(locations[0], unit);
 
-      if (activeRequestRef.current !== requestId) {
-        return;
-      }
+      if (activeRequestRef.current !== requestId) return;
 
       const weather = toWeatherViewModel(locations[0], forecast, unit);
+
       dispatch({ type: "fetchSuccess", payload: weather });
     } catch {
-      if (activeRequestRef.current !== requestId) {
-        return;
-      }
+      if (activeRequestRef.current !== requestId) return;
 
       dispatch({
         type: "fetchError",
@@ -228,22 +159,41 @@ export function AppProvider({ children }: PropsWithChildren) {
     }
   };
 
+  const searchWeather = async (queryOverride?: string) => {
+    const nextQuery = (queryOverride ?? state.query).trim();
+
+    if (!nextQuery) {
+      dispatch({ type: "fetchNoResults", payload: nextQuery });
+      return;
+    }
+
+    await performSearch(nextQuery, state.unitSystem);
+  };
+
+  const retrySearch = async () => {
+    await searchWeather(state.lastSearchQuery || state.query);
+  };
+
+  const selectUnit = async (unit: UnitSystem) => {
+    dispatch({ type: "setUnitSystem", payload: unit });
+
+    const query =
+      state.weather?.locationQuery || state.lastSearchQuery || state.query;
+
+    await performSearch(query, unit);
+  };
+
   const login = async () => {
     try {
       const res = await fetch("/api/login", { method: "POST" });
-
-      // ✅ In Cypress → intercepted → res.ok = true
-      // ❌ In local → 404 → res.ok = false
 
       if (res.ok) {
         dispatch({ type: "loginSuccess" });
         return;
       }
 
-      // ✅ fallback for local dev (no backend)
       dispatch({ type: "loginSuccess" });
     } catch {
-      // ✅ network failure fallback
       dispatch({ type: "loginSuccess" });
     }
   };
