@@ -1,10 +1,14 @@
-@use './styles/variables' as *;
+@use "./styles/variables" as *;
 
 .page {
   min-height: 100vh;
   padding: 3rem clamp(1rem, 2vw, 2rem) 4rem;
   background:
-    radial-gradient(circle at 50% 20%, rgba(82, 98, 255, 0.15), transparent 28%),
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(82, 98, 255, 0.15),
+      transparent 28%
+    ),
     linear-gradient(180deg, #09032f 0%, #08022c 100%);
 }
 
@@ -348,7 +352,7 @@
 
   &:hover,
   &:focus-visible,
-  &[data-active='true'] {
+  &[data-active="true"] {
     transform: translateY(-2px);
     border-color: rgba(112, 129, 255, 0.55);
     background: rgba(47, 42, 86, 0.98);
@@ -552,6 +556,20 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.dayNameSkeleton {
+  height: 12px;
+  width: 40px;
+  background: #334155;
+  border-radius: 4px;
+}
+
+.dayRangeSkeleton {
+  height: 12px;
+  width: 60px;
+  background: #334155;
+  border-radius: 4px;
 }
 
 @media (max-width: 75rem) {

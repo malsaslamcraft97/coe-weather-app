@@ -1,12 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
-import { AppProvider } from "./context/AppProvider";
 import {
   mockWeatherApiError,
   mockWeatherNoResults,
   mockWeatherSuccess,
 } from "./test/msw/scenarios";
+
+import { AppProvider } from "./context/AppProvider";
+
+// bypass auth HOC so tests hit dashboard directly
+vi.mock("./components/auth/withAuth", () => ({
+  withAuth: (Component: any) => Component,
+}));
 
 function renderApp() {
   return render(
@@ -23,7 +29,10 @@ describe("App API integration", () => {
 
     renderApp();
 
-    const searchBox = screen.getByRole("searchbox", { name: /search location/i });
+    const searchBox = screen.getByRole("searchbox", {
+      name: /search location/i,
+    });
+
     await user.clear(searchBox);
     await user.type(searchBox, "Tokyo");
     await user.click(screen.getByRole("button", { name: /^search$/i }));
@@ -38,12 +47,17 @@ describe("App API integration", () => {
 
     renderApp();
 
-    const searchBox = screen.getByRole("searchbox", { name: /search location/i });
+    const searchBox = screen.getByRole("searchbox", {
+      name: /search location/i,
+    });
+
     await user.clear(searchBox);
     await user.type(searchBox, "Atlantis");
     await user.click(screen.getByRole("button", { name: /^search$/i }));
 
-    expect(await screen.findByText(/no search result found!/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/no search result found!/i),
+    ).toBeInTheDocument();
   });
 
   it("shows an API error state when the forecast request fails", async () => {
@@ -54,7 +68,12 @@ describe("App API integration", () => {
 
     await user.click(screen.getByRole("button", { name: /^search$/i }));
 
-    expect(await screen.findByText(/something went wrong/i)).toBeInTheDocument();
-    expect(await screen.findByRole("button", { name: /retry/i })).toBeInTheDocument();
+    expect(
+      await screen.findByText(/something went wrong/i),
+    ).toBeInTheDocument();
+
+    expect(
+      await screen.findByRole("button", { name: /retry/i }),
+    ).toBeInTheDocument();
   });
 });

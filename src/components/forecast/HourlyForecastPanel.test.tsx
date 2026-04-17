@@ -1,10 +1,32 @@
 import { render, screen } from "@testing-library/react";
 import { HourlyForecastPanel } from "./HourlyForecastPanel";
 import { makeHourlyEntry } from "../../test/test-doubles/weather";
+import { AppContext } from "../../context/AppProvider";
+
+const renderWithProvider = (ui: React.ReactNode) => {
+  return render(
+    <AppContext.Provider
+      value={{
+        state: {
+          unitSystem: "metric",
+        } as any,
+        dispatch: vi.fn(),
+        actions: {
+          selectUnit: vi.fn(),
+          searchWeather: vi.fn(),
+          retrySearch: vi.fn(),
+          login: vi.fn(),
+        },
+      }}
+    >
+      {ui}
+    </AppContext.Provider>,
+  );
+};
 
 describe("HourlyForecastPanel", () => {
   it("renders hourly entries with their conditions and temperatures", () => {
-    render(
+    renderWithProvider(
       <HourlyForecastPanel
         hourlyForecast={[
           makeHourlyEntry({
@@ -17,13 +39,19 @@ describe("HourlyForecastPanel", () => {
       />,
     );
 
-    expect(screen.getByText(/sunny with occasional cloud breaks/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/sunny with occasional cloud breaks/i),
+    ).toBeInTheDocument();
+
     expect(screen.getByText("20°")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /tuesday/i })).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: /tue/i })).toBeInTheDocument();
   });
 
   it("shows an empty state when no hourly entries exist", () => {
-    render(<HourlyForecastPanel hourlyForecast={[]} selectedDayLabel="Tue" />);
+    renderWithProvider(
+      <HourlyForecastPanel hourlyForecast={[]} selectedDayLabel="Tue" />,
+    );
 
     expect(
       screen.getByText(/no hourly forecast is available for this day yet/i),
@@ -31,7 +59,7 @@ describe("HourlyForecastPanel", () => {
   });
 
   it("renders a fallback temperature when the value is missing", () => {
-    render(
+    renderWithProvider(
       <HourlyForecastPanel
         hourlyForecast={[
           makeHourlyEntry({ time: "4 PM", temperature: undefined as never }),

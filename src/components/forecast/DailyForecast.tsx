@@ -1,3 +1,4 @@
+import React, { useCallback } from "react";
 import styles from "../../App.module.scss";
 import type { ForecastDay } from "../../data/weather";
 import { useDailyForecast } from "./useDailyForecast";
@@ -9,7 +10,7 @@ type DailyForecastProps = {
   isLoading?: boolean;
 };
 
-export function DailyForecast({
+export const DailyForecast = React.memo(function DailyForecast({
   forecastDays,
   selectedDay,
   onSelectDay,
@@ -17,19 +18,24 @@ export function DailyForecast({
 }: DailyForecastProps) {
   const { title, emptyLabel } = useDailyForecast();
 
+  const handleSelect = useCallback(
+    (id: string) => {
+      onSelectDay(id);
+    },
+    [onSelectDay],
+  );
+
   if (isLoading) {
     return (
       <section className={styles.forecastSection}>
         <h2 className={styles.sectionTitle}>{title}</h2>
+
         <div className={styles.dailyGrid}>
           {Array.from({ length: 7 }, (_, index) => (
             <article className={styles.dayCard} key={index}>
-              <span className={styles.dayName}>&nbsp;</span>
-              <span className={styles.daySkeletonIcon} />
-              <span className={styles.dayRange}>
-                <span> </span>
-                <span> </span>
-              </span>
+              <div className={styles.dayNameSkeleton} />
+              <div className={styles.daySkeletonIcon} />
+              <div className={styles.dayRangeSkeleton} />
             </article>
           ))}
         </div>
@@ -52,22 +58,41 @@ export function DailyForecast({
 
       <div className={styles.dailyGrid}>
         {forecastDays.map((day) => (
-          <button
-            className={styles.dayCard}
-            data-active={day.id === selectedDay}
+          <DayCard
             key={day.id}
-            type="button"
-            onClick={() => onSelectDay(day.id)}
-          >
-            <span className={styles.dayName}>{day.day}</span>
-            <img className={styles.dayIcon} src={day.icon} alt="" />
-            <span className={styles.dayRange}>
-              <span>{day.high}°</span>
-              <span>{day.low}°</span>
-            </span>
-          </button>
+            day={day}
+            isActive={day.id === selectedDay}
+            onSelect={handleSelect}
+          />
         ))}
       </div>
     </section>
   );
-}
+});
+
+/* Memoized card to avoid unnecessary re-renders */
+const DayCard = React.memo(function DayCard({
+  day,
+  isActive,
+  onSelect,
+}: {
+  day: ForecastDay;
+  isActive: boolean;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <button
+      className={styles.dayCard}
+      data-active={isActive}
+      type="button"
+      onClick={() => onSelect(day.id)}
+    >
+      <span className={styles.dayName}>{day.day}</span>
+      <img className={styles.dayIcon} src={day.icon} alt="" />
+      <span className={styles.dayRange}>
+        <span>{day.high}°</span>
+        <span>{day.low}°</span>
+      </span>
+    </button>
+  );
+});
