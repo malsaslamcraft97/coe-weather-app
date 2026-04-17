@@ -1,13 +1,20 @@
 import React from "react";
+import { useAppContext } from "../../context/AppProvider";
+import { Login } from "./Login";
 
-export function withAuth(Component: any) {
-  return function Wrapped(props: any) {
-    const isLoggedIn = !!localStorage.getItem("token");
+export function withAuth<P extends object>(Component: React.ComponentType<P>) {
+  const WrappedComponent = (props: P) => {
+    const { state } = useAppContext();
 
-    if (!isLoggedIn) {
-      return <div>Please login to continue</div>;
+    if (!state.isAuthenticated) {
+      return <Login />;
     }
 
     return <Component {...props} />;
   };
+
+  // helpful for React DevTools
+  WrappedComponent.displayName = `withAuth(${Component.displayName || Component.name || "Component"})`;
+
+  return WrappedComponent;
 }

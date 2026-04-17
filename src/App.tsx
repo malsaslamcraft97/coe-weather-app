@@ -10,15 +10,9 @@ import errorIcon from "../starter-files/assets/images/icon-error.svg";
 import retryIcon from "../starter-files/assets/images/icon-retry.svg";
 import { useAppContext } from "./context/AppProvider";
 import { Login } from "./components/auth/Login";
+import { withAuth } from "./components/auth/withAuth";
 
 function App() {
-  const { state } = useAppContext();
-
-  // ✅ AUTH GUARD (routing)
-  if (!state.isAuthenticated) {
-    return <Login />;
-  }
-
   const {
     query,
     status,
@@ -117,4 +111,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuth(App);
