@@ -1,13 +1,13 @@
-import React, { Suspense } from "react";
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./styles/index.scss";
 import { AppProvider } from "./context/AppProvider";
+
+const App = lazy(() => import("./App"));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Loading app...</div>}>
         <App />
       </Suspense>
     </AppProvider>
