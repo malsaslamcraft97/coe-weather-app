@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Login } from "./Login";
-import { AppContext } from "../../context/AppProvider";
+import { AppContext } from "../../../context/AppProvider";
 
 describe("Login form", () => {
   const setup = () => {
@@ -28,23 +28,19 @@ describe("Login form", () => {
     return { user, mockLogin };
   };
 
-  it("shows error when fields are empty", async () => {
+  it("shows error when email is empty", async () => {
     const { user } = setup();
 
-    await user.click(screen.getByTestId("login-button"));
+    await user.click(screen.getByRole("button", { name: /continue/i }));
 
-    expect(
-      screen.getByText("Email and password are required"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Email is required")).toBeInTheDocument();
   });
 
   it("shows error for invalid email", async () => {
     const { user } = setup();
 
-    await user.type(screen.getByTestId("email-input"), "invalid");
-    await user.type(screen.getByTestId("password-input"), "123456");
-
-    await user.click(screen.getByTestId("login-button"));
+    await user.type(screen.getByPlaceholderText("Email"), "invalid");
+    await user.click(screen.getByRole("button", { name: /continue/i }));
 
     expect(screen.getByText("Please enter a valid email")).toBeInTheDocument();
   });
@@ -52,10 +48,11 @@ describe("Login form", () => {
   it("shows error for short password", async () => {
     const { user } = setup();
 
-    await user.type(screen.getByTestId("email-input"), "test@test.com");
-    await user.type(screen.getByTestId("password-input"), "123");
+    await user.type(screen.getByPlaceholderText("Email"), "test@test.com");
+    await user.click(screen.getByRole("button", { name: /continue/i }));
 
-    await user.click(screen.getByTestId("login-button"));
+    await user.type(screen.getByPlaceholderText("Password"), "123");
+    await user.click(screen.getByRole("button", { name: /login/i }));
 
     expect(
       screen.getByText("Password must be at least 6 characters"),
@@ -65,10 +62,11 @@ describe("Login form", () => {
   it("calls login when form is valid", async () => {
     const { user, mockLogin } = setup();
 
-    await user.type(screen.getByTestId("email-input"), "test@test.com");
-    await user.type(screen.getByTestId("password-input"), "123456");
+    await user.type(screen.getByPlaceholderText("Email"), "test@test.com");
+    await user.click(screen.getByRole("button", { name: /continue/i }));
 
-    await user.click(screen.getByTestId("login-button"));
+    await user.type(screen.getByPlaceholderText("Password"), "123456");
+    await user.click(screen.getByRole("button", { name: /login/i }));
 
     expect(mockLogin).toHaveBeenCalled();
   });
