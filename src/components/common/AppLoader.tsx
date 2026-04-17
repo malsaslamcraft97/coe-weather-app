@@ -1,7 +1,12 @@
+import styles from "./AppLoader.module.scss";
+
 export function AppLoader() {
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <p>Loading weather app...</p>
+    <div className={styles.container}>
+      <div className={styles.loader}>
+        <div className={styles.spinner} />
+        <p className={styles.text}>Fetching weather data...</p>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import styles from "./App.module.scss";
 import { DailyForecast } from "./components/forecast/DailyForecast";
 import { HourlyForecastPanel } from "./components/forecast/HourlyForecastPanel";
@@ -9,6 +10,7 @@ import { useApp } from "./useApp";
 import errorIcon from "../starter-files/assets/images/icon-error.svg";
 import retryIcon from "../starter-files/assets/images/icon-retry.svg";
 import { withAuth } from "./components/auth/withAuth";
+import { AppLoader } from "./components/common/AppLoader";
 
 function App() {
   const {
@@ -33,6 +35,7 @@ function App() {
 
   const showDashboard =
     status === "ready" || status === "searching" || status === "loading";
+
   const showSearchProgress = status === "searching";
   const showLoadingDashboard = status === "loading" && !weather;
   const showNoResults = status === "no-results";
@@ -46,7 +49,7 @@ function App() {
           unitSystem={unitSystem}
           onToggleUnits={toggleUnitsMenu}
           onSelectUnit={selectUnit}
-          onLogout={logout} // ✅ now properly wired
+          onLogout={logout}
         />
 
         <SearchHero
@@ -79,30 +82,34 @@ function App() {
         )}
 
         {showDashboard && (
-          <section className={styles.dashboard}>
-            <div className={styles.mainColumn}>
-              <CurrentWeatherCard
-                weatherCard={weather?.currentCard ?? null}
-                isLoading={showLoadingDashboard}
-              />
-              <WeatherMetrics
-                metricCards={weather?.metricCards ?? []}
-                isLoading={showLoadingDashboard}
-              />
-              <DailyForecast
-                forecastDays={forecastDays}
-                selectedDay={selectedDay}
-                onSelectDay={setSelectedDay}
-                isLoading={showLoadingDashboard}
-              />
-            </div>
+          <Suspense fallback={<AppLoader />}>
+            <section className={styles.dashboard}>
+              <div className={styles.mainColumn}>
+                <CurrentWeatherCard
+                  weatherCard={weather?.currentCard ?? null}
+                  isLoading={showLoadingDashboard}
+                />
 
-            <HourlyForecastPanel
-              hourlyForecast={hourlyForecast}
-              selectedDayLabel={showLoadingDashboard ? "-" : selectedDayLabel}
-              isLoading={showLoadingDashboard}
-            />
-          </section>
+                <WeatherMetrics
+                  metricCards={weather?.metricCards ?? []}
+                  isLoading={showLoadingDashboard}
+                />
+
+                <DailyForecast
+                  forecastDays={forecastDays}
+                  selectedDay={selectedDay}
+                  onSelectDay={setSelectedDay}
+                  isLoading={showLoadingDashboard}
+                />
+              </div>
+
+              <HourlyForecastPanel
+                hourlyForecast={hourlyForecast}
+                selectedDayLabel={showLoadingDashboard ? "-" : selectedDayLabel}
+                isLoading={showLoadingDashboard}
+              />
+            </section>
+          </Suspense>
         )}
       </div>
     </main>
