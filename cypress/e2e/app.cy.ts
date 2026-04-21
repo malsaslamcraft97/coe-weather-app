@@ -59,17 +59,22 @@ describe("Weather app (authenticated)", () => {
 
     cy.visit("/");
 
-    // Step 1 → email
+    // Inject axe once after page load
+    cy.injectAxe();
+
+    // Login flow
     cy.get('[data-testid="email-input"]', { timeout: 10000 })
       .should("be.visible")
       .type("test@test.com");
 
     cy.contains("button", "Continue").click();
 
-    // Step 2 → password
     cy.get('[data-testid="password-input"]')
       .should("be.visible")
       .type("123456");
+
+    // a11y check on login step 2
+    cy.checkA11y();
 
     cy.get('[data-testid="login-button"]').click();
     cy.wait("@login");
@@ -83,6 +88,9 @@ describe("Weather app (authenticated)", () => {
     cy.contains("20°").should("be.visible");
     cy.contains("Feels Like").should("be.visible");
     cy.contains("Hourly forecast").should("be.visible");
+
+    // a11y check on dashboard
+    cy.checkA11y();
   });
 
   it("searches again when the user submits a new location", () => {
@@ -138,6 +146,9 @@ describe("Weather app (authenticated)", () => {
 
     cy.contains("Tokyo, Japan").should("be.visible");
     cy.contains("27°").should("be.visible");
+
+    // a11y check after search interaction
+    cy.checkA11y();
   });
 
   it("displays additional weather metrics", () => {
@@ -148,6 +159,9 @@ describe("Weather app (authenticated)", () => {
     cy.contains("Humidity").should("be.visible");
     cy.contains("Wind").should("be.visible");
     cy.contains("Precipitation").should("be.visible");
+
+    // a11y check
+    cy.checkA11y();
   });
 
   it("toggles temperature units from Celsius to Fahrenheit", () => {
@@ -159,6 +173,9 @@ describe("Weather app (authenticated)", () => {
 
     cy.wait("@fetchForecast");
     cy.contains("68°").should("be.visible");
+
+    // a11y check after unit change
+    cy.checkA11y();
   });
 
   it("opens units dropdown and selects Fahrenheit", () => {
@@ -168,18 +185,28 @@ describe("Weather app (authenticated)", () => {
     cy.get('[data-testid="units-toggle"]').click();
     cy.get('[data-testid="units-dropdown"]').should("be.visible");
 
+    // scoped a11y check (better practice)
+    cy.checkA11y('[data-testid="units-dropdown"]');
+
     cy.contains("Fahrenheit").click();
 
     cy.wait("@fetchForecast");
     cy.contains("68°").should("be.visible");
+
+    cy.checkA11y();
   });
 });
 
 describe("Auth flow", () => {
   it("shows login screen before authentication", () => {
     cy.visit("/");
+    cy.injectAxe();
+
     cy.contains("Login").should("be.visible");
     cy.contains("Hourly forecast").should("not.exist");
+
+    // a11y check for login screen
+    cy.checkA11y();
   });
 
   it("logs in successfully and shows weather app", () => {
@@ -189,15 +216,23 @@ describe("Auth flow", () => {
     }).as("login");
 
     cy.visit("/");
+    cy.injectAxe();
 
     cy.get('[data-testid="email-input"]').type("test@test.com");
     cy.contains("button", "Continue").click();
 
     cy.get('[data-testid="password-input"]').type("123456");
-    cy.get('[data-testid="login-button"]').click();
 
+    // a11y before submit
+    cy.checkA11y();
+
+    cy.get('[data-testid="login-button"]').click();
     cy.wait("@login");
+
     cy.contains("Hourly forecast").should("be.visible");
+
+    // a11y after login
+    cy.checkA11y();
   });
 
   it("navigates from login screen to dashboard after login", () => {
@@ -207,6 +242,7 @@ describe("Auth flow", () => {
     }).as("login");
 
     cy.visit("/");
+    cy.injectAxe();
 
     cy.get('[data-testid="email-input"]').type("test@test.com");
     cy.contains("button", "Continue").click();
@@ -216,5 +252,8 @@ describe("Auth flow", () => {
 
     cy.wait("@login");
     cy.contains("Hourly forecast").should("be.visible");
+
+    // final a11y check
+    cy.checkA11y();
   });
 });
