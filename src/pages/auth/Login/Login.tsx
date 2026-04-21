@@ -15,6 +15,7 @@ export function Login() {
           {step === 0 && (
             <>
               <input
+                data-testid="email-input"
                 className={styles.input}
                 type="email"
                 placeholder="Email"
@@ -34,6 +35,7 @@ export function Login() {
           {step === 1 && (
             <>
               <input
+                data-testid="password-input"
                 className={styles.input}
                 type="password"
                 placeholder="Password"
@@ -45,7 +47,11 @@ export function Login() {
                 <button type="button" onClick={prev}>
                   Back
                 </button>
-                <button type="submit" className={styles.primaryBtn}>
+                <button
+                  type="submit"
+                  className={styles.primaryBtn}
+                  data-testid="login-button"
+                >
                   Login
                 </button>
               </div>
