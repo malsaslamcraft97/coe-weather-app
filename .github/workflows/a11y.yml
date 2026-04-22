@@ -1,0 +1,26 @@
+name: Accessibility Checks (Pa11y)
+
+on:
+  push:
+    branches: [main, feat/a11y-e2e]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pa11y:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Pa11y CI
+        run: npm run a11y:ci
