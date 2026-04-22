@@ -7,6 +7,19 @@ module.exports = defineConfig({
     supportFile: "cypress/support/e2e.ts",
     viewportWidth: 1440,
     viewportHeight: 1024,
+    setupNodeEvents(on, config) {
+      on("task", {
+        logA11y(data) {
+          console.log("\n=== A11Y REPORT ===");
+          console.log(JSON.stringify(data, null, 2));
+          console.log("=== END REPORT ===\n");
+          return null;
+        },
+      });
+
+      return config;
+    },
   },
+
   video: false,
 });
