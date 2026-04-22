@@ -204,6 +204,9 @@ While Cypress-axe tests passed with zero violations, Pa11y identified additional
      - `aria-label`
      - `aria-labelledby`
 
+3. **Image link missing alt**
+   - App Header logo had empty alt
+
 ---
 
 ### 🤔 Why Cypress Missed This

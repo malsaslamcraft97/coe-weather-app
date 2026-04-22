@@ -16,7 +16,7 @@ export function AppHeader(props: AppHeaderProps) {
   return (
     <header className={styles.header}>
       <a className={styles.brand} href="/" aria-label="Weather Now home">
-        <img src={logo} alt="" />
+        <img src={logo} alt="Weather Now Home" />
       </a>
 
       <div className={styles.unitSwitch}>
