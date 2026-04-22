@@ -4,17 +4,21 @@ function logA11y(context?: string) {
     context,
     undefined,
     (violations) => {
-      cy.task("logA11y", {
-        count: violations.length,
-        violations: violations.map((v) => ({
+      cy.task(
+        "logA11y",
+        violations.map((v) => ({
           id: v.id,
           impact: v.impact,
           description: v.description,
-          nodes: v.nodes.length,
+          nodes: v.nodes.map((node) => ({
+            target: node.target.join(" "),
+            html: node.html,
+            failureSummary: node.failureSummary,
+          })),
         })),
-      });
+      );
     },
-    true,
+    true, // don't fail tests
   );
 }
 

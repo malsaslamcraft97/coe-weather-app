@@ -35,7 +35,7 @@ export function HourlyForecastPanel({
   };
 
   return (
-    <aside className={styles.hourlyPanel}>
+    <section className={styles.hourlyPanel}>
       <Tabs
         value={String(selectedDayIndex)}
         onChange={(val) => setSelectedDayIndex(Number(val))}
@@ -103,7 +103,7 @@ export function HourlyForecastPanel({
           />
         </Tabs.Content>
       </Tabs>
-    </aside>
+    </section>
   );
 }
 

@@ -107,7 +107,7 @@ function App() {
 
           {showDashboard && (
             <Suspense fallback={<AppLoader />}>
-              <div className={styles.dashboard}>
+              <section className={styles.dashboard}>
                 {/* MAIN CONTENT COLUMN */}
                 <div className={styles.mainColumn}>
                   <section aria-labelledby="current-weather-heading">
@@ -147,7 +147,7 @@ function App() {
                 </div>
 
                 {/* ASIDE (COMPLEMENTARY LANDMARK FIX) */}
-                <aside
+                <section
                   aria-labelledby="hourly-forecast-heading"
                   className={styles.sidebar}
                 >
@@ -162,8 +162,8 @@ function App() {
                     }
                     isLoading={showLoadingDashboard}
                   />
-                </aside>
-              </div>
+                </section>
+              </section>
             </Suspense>
           )}
         </div>

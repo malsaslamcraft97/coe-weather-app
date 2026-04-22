@@ -2,6 +2,7 @@ import React from "react";
 import { useAppContext } from "../../context/AppProvider";
 import { Login } from "../../pages/auth/Login/Login";
 import { Signup } from "../../pages/auth/Signup/Signup";
+import styles from "../../App.module.scss";
 
 export function withAuth<P extends object>(Component: React.ComponentType<P>) {
   const WrappedComponent = (props: P) => {
@@ -15,7 +16,7 @@ export function withAuth<P extends object>(Component: React.ComponentType<P>) {
           {mode === "login" ? (
             <>
               <Login />
-              <p>
+              <p className={styles.authSwitchText}>
                 Don’t have an account?{" "}
                 <button onClick={() => setMode("signup")}>Sign up</button>
               </p>
@@ -23,7 +24,7 @@ export function withAuth<P extends object>(Component: React.ComponentType<P>) {
           ) : (
             <>
               <Signup />
-              <p>
+              <p className={styles.authSwitchText}>
                 Already have an account?{" "}
                 <button onClick={() => setMode("login")}>Login</button>
               </p>
