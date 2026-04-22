@@ -12,7 +12,9 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "test:e2e": "start-server-and-test dev:e2e http://127.0.0.1:4173 cypress:run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite",
+    "a11y:ci": "kill-port 5173 && start-server-and-test dev http://localhost:5173 \"pa11y http://localhost:5173\""
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -29,7 +31,9 @@
     "cypress": "^13.17.0",
     "cypress-axe": "^1.7.0",
     "jsdom": "^29.0.2",
+    "kill-port": "^2.0.1",
     "msw": "^2.13.3",
+    "pa11y": "^9.1.1",
     "sass": "^1.77.8",
     "start-server-and-test": "^3.0.2",
     "typescript": "^5.5.4",

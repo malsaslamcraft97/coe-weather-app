@@ -8,6 +8,7 @@ export function Login() {
   return (
     <div className={styles.container}>
       <h1 className={styles.srOnly}>Login</h1>
+
       <div className={styles.card}>
         <h2 className={styles.title}>Welcome Back</h2>
         <p className={styles.subtitle}>Login to continue</p>
@@ -15,7 +16,14 @@ export function Login() {
         <form onSubmit={handleSubmit} className={styles.form}>
           {step === 0 && (
             <>
+              {/* Accessible label */}
+              <label htmlFor="email" className={styles.srOnly}>
+                Email address
+              </label>
+
               <input
+                id="email"
+                name="email"
                 data-testid="email-input"
                 className={styles.input}
                 type="email"
@@ -23,10 +31,15 @@ export function Login() {
                 value={data.email}
                 onChange={(e) => setField("email", e.target.value)}
               />
+
+              {/* Changed to submit so form has submit button */}
               <button
-                type="button"
+                type="submit"
                 className={styles.primaryBtn}
-                onClick={handleNext}
+                onClick={(e) => {
+                  e.preventDefault(); // prevent actual submit
+                  handleNext();
+                }}
               >
                 Continue
               </button>
@@ -35,7 +48,14 @@ export function Login() {
 
           {step === 1 && (
             <>
+              {/* Accessible label */}
+              <label htmlFor="password" className={styles.srOnly}>
+                Password
+              </label>
+
               <input
+                id="password"
+                name="password"
                 data-testid="password-input"
                 className={styles.input}
                 type="password"
@@ -48,6 +68,7 @@ export function Login() {
                 <button type="button" onClick={prev}>
                   Back
                 </button>
+
                 <button
                   type="submit"
                   className={styles.primaryBtn}

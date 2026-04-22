@@ -177,8 +177,8 @@ export function logA11y(context?: string) {
 
 ## 🚀 Next Steps
 
-- Add Pa11y to CI
-- Add Lighthouse CI
+- Add Pa11y to CI (DONE)
+- Add Lighthouse CI (NEXT)
 - Perform manual keyboard + screen reader testing
 
 ---
@@ -187,3 +187,44 @@ export function logA11y(context?: string) {
 
 Accessibility is now integrated into the development workflow using
 Cypress + axe.
+
+## 🔍 Pa11y vs Cypress-axe Findings
+
+While Cypress-axe tests passed with zero violations, Pa11y identified additional accessibility issues on the login form:
+
+### ❌ Issues Detected by Pa11y
+
+1. **Form missing submit button**
+   - Forms must include a `<button type="submit">`
+   - Required for keyboard accessibility
+
+2. **Input missing accessible name**
+   - Email input had no:
+     - `<label>`
+     - `aria-label`
+     - `aria-labelledby`
+
+---
+
+### 🤔 Why Cypress Missed This
+
+Cypress-axe focuses on:
+
+- Rendered UI
+- Interaction states
+
+It may miss:
+
+- Semantic HTML issues
+- Form structure problems
+
+---
+
+### ✅ Key Learning
+
+Accessibility requires multiple layers:
+
+- Cypress-axe → user flow validation
+- Pa11y → semantic & WCAG validation
+
+Both are necessary for complete coverage.
