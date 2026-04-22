@@ -14,7 +14,8 @@
     "test:e2e": "start-server-and-test dev:e2e http://127.0.0.1:4173 cypress:run",
     "preview": "vite preview",
     "start": "vite",
-    "a11y:ci": "kill-port 5173 && VITE_A11Y_BYPASS=true start-server-and-test dev http://localhost:5173 \"npx pa11y-ci --config pa11yci.cjs\""
+    "a11y:ci": "kill-port 5173 && VITE_A11Y_BYPASS=true start-server-and-test dev http://localhost:5173 \"npx pa11y-ci --config pa11yci.cjs\"",
+    "lighthouse:ci": "lhci autorun"
   },
   "dependencies": {
     "esbuild": "^0.28.0",
@@ -22,6 +23,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",

@@ -1,17 +1,18 @@
-name: Accessibility Checks (Pa11y)
+name: Accessibility CI
 
 on:
   push:
     branches: [main, feat/a11y-e2e]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   pa11y:
     runs-on: ubuntu-latest
-
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repo
@@ -21,9 +22,61 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
 
       - name: Install dependencies
         run: npm install
 
+      # FIX: Required for Puppeteer/Pa11y
+      - name: Install Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 \
+            libatk-bridge2.0-0 \
+            libxss1 \
+            libasound2t64 \
+            libgbm-dev
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Set Chrome path
+        run: echo "PUPPETEER_EXECUTABLE_PATH=$(which google-chrome)" >> $GITHUB_ENV
+
       - name: Run Pa11y CI
         run: npm run a11y:ci
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    needs: pa11y
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      # SAME FIX (reuse knowledge)
+      - name: Install Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 \
+            libatk-bridge2.0-0 \
+            libxss1 \
+            libasound2t64 \
+            libgbm-dev
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run Lighthouse CI
+        run: npm run lighthouse:ci
