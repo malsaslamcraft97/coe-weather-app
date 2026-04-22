@@ -17,6 +17,7 @@
     "a11y:ci": "kill-port 5173 && VITE_A11Y_BYPASS=true start-server-and-test dev http://localhost:5173 \"npx pa11y-ci --config pa11yci.cjs\""
   },
   "dependencies": {
+    "esbuild": "^0.28.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -40,5 +41,8 @@
     "typescript": "^5.5.4",
     "vite": "^5.3.4",
     "vitest": "^4.1.4"
+  },
+  "overrides": {
+    "esbuild": "^0.25.0"
   }
 }
