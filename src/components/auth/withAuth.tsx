@@ -8,23 +8,28 @@ export function withAuth<P extends object>(Component: React.ComponentType<P>) {
     const { state } = useAppContext();
     const [mode, setMode] = React.useState<"login" | "signup">("login");
 
+    // FIX: Ensure unauthenticated state also has a <main> landmark
     if (!state.isAuthenticated) {
-      return mode === "login" ? (
-        <>
-          <Login />
-          <p>
-            Don’t have an account?{" "}
-            <button onClick={() => setMode("signup")}>Sign up</button>
-          </p>
-        </>
-      ) : (
-        <>
-          <Signup />
-          <p>
-            Already have an account?{" "}
-            <button onClick={() => setMode("login")}>Login</button>
-          </p>
-        </>
+      return (
+        <main>
+          {mode === "login" ? (
+            <>
+              <Login />
+              <p>
+                Don’t have an account?{" "}
+                <button onClick={() => setMode("signup")}>Sign up</button>
+              </p>
+            </>
+          ) : (
+            <>
+              <Signup />
+              <p>
+                Already have an account?{" "}
+                <button onClick={() => setMode("login")}>Login</button>
+              </p>
+            </>
+          )}
+        </main>
       );
     }
 

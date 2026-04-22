@@ -42,77 +42,133 @@ function App() {
   const showError = status === "error";
 
   return (
-    <main className={styles.page}>
-      <div className={styles.shell}>
-        <AppHeader
-          isUnitsOpen={isUnitsOpen}
-          unitSystem={unitSystem}
-          onToggleUnits={toggleUnitsMenu}
-          onSelectUnit={selectUnit}
-          onLogout={logout}
-        />
+    <>
+      <AppHeader
+        isUnitsOpen={isUnitsOpen}
+        unitSystem={unitSystem}
+        onToggleUnits={toggleUnitsMenu}
+        onSelectUnit={selectUnit}
+        onLogout={logout}
+      />
 
-        <SearchHero
-          query={query}
-          onQueryChange={setQuery}
-          onSubmit={handleSearchSubmit}
-          searchStatusLabel={showSearchProgress ? "Search in progress" : ""}
-        />
+      {/* MAIN LANDMARK */}
+      <main className={styles.page}>
+        {/* Page-level heading (screen-reader visible only) */}
+        <h1 className={styles.srOnly}>Weather Dashboard</h1>
 
-        {showNoResults && (
-          <section className={styles.messageState}>
-            <h2 className={styles.messageTitle}>No search result found!</h2>
+        <div className={styles.shell}>
+          {/* SEARCH REGION */}
+          <section aria-labelledby="search-heading">
+            <h2 id="search-heading" className={styles.srOnly}>
+              Search location
+            </h2>
+
+            <SearchHero
+              query={query}
+              onQueryChange={setQuery}
+              onSubmit={handleSearchSubmit}
+              searchStatusLabel={showSearchProgress ? "Search in progress" : ""}
+            />
           </section>
-        )}
 
-        {showError && (
-          <section className={styles.errorState}>
-            <img className={styles.errorIcon} src={errorIcon} alt="" />
-            <h2 className={styles.errorTitle}>Something went wrong</h2>
-            <p className={styles.errorCopy}>{errorMessage}</p>
-            <button
-              className={styles.retryButton}
-              type="button"
-              onClick={() => void retrySearch()}
+          {showNoResults && (
+            <section
+              aria-labelledby="no-results-heading"
+              className={styles.messageState}
             >
-              <img src={retryIcon} alt="" />
-              Retry
-            </button>
-          </section>
-        )}
-
-        {showDashboard && (
-          <Suspense fallback={<AppLoader />}>
-            <section className={styles.dashboard}>
-              <div className={styles.mainColumn}>
-                <CurrentWeatherCard
-                  weatherCard={weather?.currentCard ?? null}
-                  isLoading={showLoadingDashboard}
-                />
-
-                <WeatherMetrics
-                  metricCards={weather?.metricCards ?? []}
-                  isLoading={showLoadingDashboard}
-                />
-
-                <DailyForecast
-                  forecastDays={forecastDays}
-                  selectedDay={selectedDay}
-                  onSelectDay={setSelectedDay}
-                  isLoading={showLoadingDashboard}
-                />
-              </div>
-
-              <HourlyForecastPanel
-                hourlyForecast={hourlyForecast}
-                selectedDayLabel={showLoadingDashboard ? "-" : selectedDayLabel}
-                isLoading={showLoadingDashboard}
-              />
+              <h2 id="no-results-heading" className={styles.messageTitle}>
+                No search result found!
+              </h2>
             </section>
-          </Suspense>
-        )}
-      </div>
-    </main>
+          )}
+
+          {showError && (
+            <section
+              aria-labelledby="error-heading"
+              className={styles.errorState}
+            >
+              <h2 id="error-heading" className={styles.errorTitle}>
+                Something went wrong
+              </h2>
+
+              <img className={styles.errorIcon} src={errorIcon} alt="" />
+              <p className={styles.errorCopy}>{errorMessage}</p>
+
+              <button
+                className={styles.retryButton}
+                type="button"
+                onClick={() => void retrySearch()}
+              >
+                <img src={retryIcon} alt="" />
+                Retry
+              </button>
+            </section>
+          )}
+
+          {showDashboard && (
+            <Suspense fallback={<AppLoader />}>
+              <div className={styles.dashboard}>
+                {/* MAIN CONTENT COLUMN */}
+                <div className={styles.mainColumn}>
+                  <section aria-labelledby="current-weather-heading">
+                    <h2 id="current-weather-heading" className={styles.srOnly}>
+                      Current weather
+                    </h2>
+
+                    <CurrentWeatherCard
+                      weatherCard={weather?.currentCard ?? null}
+                      isLoading={showLoadingDashboard}
+                    />
+                  </section>
+
+                  <section aria-labelledby="weather-metrics-heading">
+                    <h2 id="weather-metrics-heading" className={styles.srOnly}>
+                      Weather metrics
+                    </h2>
+
+                    <WeatherMetrics
+                      metricCards={weather?.metricCards ?? []}
+                      isLoading={showLoadingDashboard}
+                    />
+                  </section>
+
+                  <section aria-labelledby="daily-forecast-heading">
+                    <h2 id="daily-forecast-heading" className={styles.srOnly}>
+                      Daily forecast
+                    </h2>
+
+                    <DailyForecast
+                      forecastDays={forecastDays}
+                      selectedDay={selectedDay}
+                      onSelectDay={setSelectedDay}
+                      isLoading={showLoadingDashboard}
+                    />
+                  </section>
+                </div>
+
+                {/* ASIDE (COMPLEMENTARY LANDMARK FIX) */}
+                <aside
+                  aria-labelledby="hourly-forecast-heading"
+                  className={styles.sidebar}
+                >
+                  <h2 id="hourly-forecast-heading" className={styles.srOnly}>
+                    Hourly forecast
+                  </h2>
+
+                  <HourlyForecastPanel
+                    hourlyForecast={hourlyForecast}
+                    selectedDayLabel={
+                      showLoadingDashboard ? "-" : selectedDayLabel
+                    }
+                    isLoading={showLoadingDashboard}
+                  />
+                </aside>
+              </div>
+            </Suspense>
+          )}
+        </div>
+      </main>
+    </>
   );
 }
 
