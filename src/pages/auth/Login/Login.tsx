@@ -7,6 +7,7 @@ export function Login() {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.srOnly}>Login</h1>
       <div className={styles.card}>
         <h2 className={styles.title}>Welcome Back</h2>
         <p className={styles.subtitle}>Login to continue</p>

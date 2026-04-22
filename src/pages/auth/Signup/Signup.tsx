@@ -7,6 +7,7 @@ export function Signup() {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.srOnly}>Sign up</h1>
       <div className={styles.card}>
         <h2 className={styles.title}>Create Account</h2>
         <p className={styles.subtitle}>Sign up to get started</p>
